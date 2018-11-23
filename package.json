@@ -1,0 +1,19 @@
+{
+  "name": "dekode",
+  "version": "1.0.0",
+  "description": "tx analyser",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://vt90:Underground1@github.com/vt90/dekode.git"
+  },
+  "author": "chainnodes",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vt90/dekode/issues"
+  },
+  "homepage": "https://github.com/vt90/dekode#readme"
+}
