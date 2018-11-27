@@ -3,7 +3,6 @@
  */
 const async = require('async');
 const express = require('express');
-
 const ENV = process.env.NODE_ENV || 'development';
 const config = require('../config')[ENV];
 const PORT = process.env.PORT || config.api.port;

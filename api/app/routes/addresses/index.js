@@ -32,6 +32,19 @@ router
     });
 
 router
+  .route('/details')
+  .post(validate({body: validationSchema.getAddressDetails}), (req, res) => {
+    addressesController.getAddressDetails(req.body)
+      .then(data => {
+        res.status(200).send(data);
+      })
+      .catch(error => {
+        res.status(400).send(error.message);
+      });
+  });
+
+
+router
     .route('/transaction-flow')
     .post(validate({body: validationSchema.getAddressTransactionFlow}), (req, res) => {
         addressesController.getTransactionsFlow(req.body)

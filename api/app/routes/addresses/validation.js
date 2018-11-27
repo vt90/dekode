@@ -45,4 +45,19 @@ module.exports = {
         },
         required: ['address', 'blockchainId', 'levelsBefore', 'levelsAfter'],
     },
+    getAddressDetails: {
+      type: 'object',
+      properties: {
+        address: {
+          type: 'string',
+          minLength: 3,
+          maxLength: 50,
+        },
+        blockchainId: {
+          type: 'number',
+          enum: [2]
+        }
+      },
+      required: ['address', 'blockchainId'],
+    },
 };

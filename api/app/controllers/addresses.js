@@ -2,6 +2,7 @@
  * Created by vladtomsa on 07/11/2018
  */
 const Addresses = require('../database/models').Addresses;
+const math = require('mathjs');
 const { ETH_API_KEY } = require('../../config/constants');
 const Web3 = require('web3');
 const axios = require('axios');
@@ -12,24 +13,90 @@ const create = (data) => {
   return Addresses.create(data);
 };
 
-const getAddressInfo = async (address) => {
-    const { data } = await axios.get(`https://api.etherscan.io/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=1000&sort=asc&apikey=${ETH_API_KEY}`);
+const extractValue = (value) => {
+  // const bigValue = math.bignumber(value).toFixed();
 
+  const weiToEther = web3.utils.fromWei(`${value}`, 'ether');
+
+  return parseFloat(weiToEther);
+};
+
+const getAddressDetails = async ({ address }) => {
+  try {
+    const balance = await getAddressBalance(address);
+    const transactions = await getTransactionsByAddress(address);
+
+    return {
+      balance,
+      transactions,
+    };
+  }
+  catch (e) {
+    console.log(e);
+    throw TypeError(`Error retrieving address details for: ${params.address}`);
+  }
+};
+
+const getAddressBalance = async (address) => {
+  const url = `https://api.blockcypher.com/v1/eth/main/addrs/${address}/balance`;
+  const { data } = await axios.get(url);
+
+  console.log('Balance: ', data.final_balance);
+  const weiToEther = web3.utils.fromWei(`${data.final_balance}`, 'ether');
+
+  console.log('Ether: ', weiToEther);
+
+  try {
+    return {
+      ...data,
+      total_received: extractValue(data.total_received),
+      total_sent: extractValue(data.total_sent),
+      balance: extractValue(data.balance),
+      unconfirmed_balance: extractValue(data.unconfirmed_balance),
+      final_balance: extractValue(data.final_balance),
+    };
+  }
+  catch (e) {
+    console.log(e);
+    console.log(data);
     return data;
+  }
+};
+
+const getTransactionsByAddress = async (address) => {
+  const url = `https://api.etherscan.io/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=2000&sort=asc&apikey=${ETH_API_KEY}`;
+    const { data: { result }  } = await axios.get(url);
+
+    return result.map((transaction) => {
+      let value = transaction.value;
+
+      try {
+       value = extractValue(transaction.value);
+      }
+      catch (e) {
+        console.log(e);
+        console.log(transaction);
+      }
+
+      return {
+        ...transaction,
+        value,
+      };
+    });
 };
 
 const getFromTransactions = async (address) => {
     console.log(`Getting transactions sent from ${address}`);
-    const { result } = await getAddressInfo(address);
+    const transactions = await getTransactionsByAddress(address);
 
-    return result.filter((trs) => trs.from.toLowerCase() === address.toLowerCase());
+    return transactions.filter((trs) => trs.from.toLowerCase() === address.toLowerCase());
 };
 
 const getToTransactions = async (address) => {
     console.log(`Getting transactions received by ${address}`);
-    const { result } = await getAddressInfo(address);
+    const transactions = await getTransactionsByAddress(address);
 
-    return result.filter((trs) => trs.to.toLowerCase() === address.toLowerCase());
+    return transactions.filter((trs) => trs.to.toLowerCase() === address.toLowerCase());
 };
 
 const getTransactionsFlow = async (params) => {
@@ -64,10 +131,7 @@ const getTransactionsFlow = async (params) => {
                         levelNodes.push({ id: trs.from });
                     }
 
-                    transactions.push({
-                        ...trs,
-                        value: parseFloat(web3.utils.fromWei(trs.value, 'ether')),
-                    });
+                    transactions.push(trs);
                 })
             }
 
@@ -94,10 +158,7 @@ const getTransactionsFlow = async (params) => {
                         levelNodes.push({ id: trs.to });
                     }
 
-                    transactions.push({
-                        ...trs,
-                        value: parseFloat(web3.utils.fromWei(trs.value, 'ether')),
-                    });
+                    transactions.push(trs);
                 })
             }
 
@@ -123,6 +184,7 @@ const list = (params) => {
 
 module.exports = {
     create,
+    getAddressDetails,
     getTransactionsFlow,
     list,
 };
