@@ -2,6 +2,7 @@
  * Created by vladtomsa on 27/09/2018
  */
 const async = require('async');
+const path = require('path');
 const express = require('express');
 const ENV = process.env.NODE_ENV || 'development';
 const config = require('../config')[ENV];
