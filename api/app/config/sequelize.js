@@ -2,7 +2,7 @@
  * Created by vladtomsa on 27/09/2018
  */
 const Sequelize = require('sequelize');
-
+// const argv = require('yargs').argv;
 let sequelizeInstance = null;
 
 const init = (app, cb) => {
@@ -26,6 +26,9 @@ const init = (app, cb) => {
         pool,
         logging: null,
     };
+
+    // const dbUsername = argv['DB_USERNAME'] || username;
+    // const dbPassword = argv['DB_PASSWORD'] || username;
 
     const sequelize = new Sequelize(
         database,

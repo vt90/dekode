@@ -4,7 +4,8 @@
   "description": "tx analyser",
   "main": "index.js",
   "scripts": {
-    "start": "node api/app/index.js"
+    "start": "node $NODE_DEBUG_OPTION api/app/index.js",
+    "start:local": "node api/app/index.js"
   },
   "repository": {
     "type": "git",

@@ -3,10 +3,10 @@
     "port": 8000
   },
   "database": {
-    "username": "-",
-    "password": "-",
-    "database": "dekode",
-    "host": "127.0.0.1",
+    "username": "ufymkfghopajha",
+    "password": "8a5014b342a4610d05d70b6c8f503ad61132147cef28b53c685f526703ecb48b",
+    "database": "dbshvge4v4na00",
+    "host": "ec2-107-20-174-127.compute-1.amazonaws.com",
     "port": 5432,
     "dialect": "postgres",
     "pool": {
