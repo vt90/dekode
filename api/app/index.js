@@ -14,6 +14,8 @@ async.auto(
         config: (cb) => {
             app.set('config', config);
 
+            app.use(express.static(path.join(__dirname, 'build-ui')));
+
             return cb(null);
         },
 
