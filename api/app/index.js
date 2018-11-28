@@ -35,7 +35,7 @@ async.auto(
   (error) => {
     if (error) console.log(error);
     else {
-      app.listen(8000, () => {
+      app.listen(PORT, () => {
         console.info('***************************************************');
         console.info('Server started on http://localhost:%s', PORT);
         console.info('***************************************************');
