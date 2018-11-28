@@ -18,8 +18,8 @@ const main = [
     }),
     () => {
       spawn(`npm run build:ui -- --domain=${domain}`, {resolve: 'ui build complete'})
-        .then(() => spawn('npm run move:ui:build', {resolve: 'moved ui build'}))
-        .then(() => spawn('npm run start:api', { resolve: 'started api server'}));
+        .then(() => spawn('npm run move:ui:build', {resolve: 'moved ui build'}));
+        // .then(() => spawn('npm run start:api', { resolve: 'started api server'}));
     }
 ];
 
