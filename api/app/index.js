@@ -11,34 +11,36 @@ const serverModulesConfigs = require('./config');
 const app = express();
 
 async.auto(
-    {
-        config: (cb) => {
-            app.set('config', config);
+  {
+    config: (cb) => {
+      app.set('config', config);
 
-            app.use(express.static(path.join(__dirname, 'build-ui')));
+      // app.get('/*', express.static(path.join(__dirname, 'build-ui')));
 
-            return cb(null);
-        },
+      app.use(express.static(path.join(__dirname, 'build-ui')));
 
-        database: ['config', (scope, cb) => {
-            serverModulesConfigs.sequelize.init(app, (error) => cb(error));
-            serverModulesConfigs.umzug.syncDatabase();
-        }],
-
-        express: ['database', (scope, cb) => {
-            serverModulesConfigs.express.init(app, (error) => cb(error))
-        }],
-
+      return cb(null);
     },
-    (error) => {
-        if (error) console.log(error);
-        else {
-            app.listen(PORT, () => {
-                console.info('***************************************************');
-                console.info('Server started on http://localhost:%s', PORT);
-                console.info('***************************************************');
-            });
-        }
+
+    database: ['config', (scope, cb) => {
+      serverModulesConfigs.sequelize.init(app, (error) => cb(error));
+      serverModulesConfigs.umzug.syncDatabase();
+    }],
+
+    express: ['database', (scope, cb) => {
+      serverModulesConfigs.express.init(app, (error) => cb(error))
+    }],
+
+  },
+  (error) => {
+    if (error) console.log(error);
+    else {
+      app.listen(8000, () => {
+        console.info('***************************************************');
+        console.info('Server started on http://localhost:%s', PORT);
+        console.info('***************************************************');
+      });
     }
+  }
 );
 

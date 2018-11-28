@@ -4,7 +4,12 @@
   "description": "tx analyser",
   "main": "index.js",
   "scripts": {
-    "start": "node $NODE_DEBUG_OPTION api/app/index.js",
+    "install:api": "cd ui && npm install",
+    "install:ui": "cd ui && npm install",
+    "build:ui": "cd ui && npm run build",
+    "move:ui:build": "rm -rf api/app/build-ui && ncp ui/build api/app/build-ui",
+    "start": "script-file --domain=https://dekode.herokuapp.com/",
+    "start:api": "node api/app/index.js",
     "start:local": "node api/app/index.js"
   },
   "repository": {
@@ -18,27 +23,7 @@
   },
   "homepage": "https://github.com/vt90/dekode#readme",
   "dependencies": {
-    "app-root-path": "2.1.0",
-    "async": "2.6.1",
-    "axios": "^0.18.0",
-    "bignumber.js": "^8.0.1",
-    "body-parser": "1.18.3",
-    "cors": "2.8.4",
-    "express": "4.16.3",
-    "express-bunyan-logger": "1.3.3",
-    "express-json-validator-middleware": "^1.2.3",
-    "http": "0.0.0",
-    "lodash": "^4.17.11",
-    "mathjs": "^5.2.3",
-    "minimist": "^1.2.0",
-    "moment": "2.22.2",
-    "pg": "7.4.3",
-    "pg-hstore": "2.3.2",
-    "sequelize": "4.39.0",
-    "umzug": "^2.2.0",
-    "web3": "^1.0.0-beta.36",
-    "yargs": "^12.0.5",
-    "morgan": "1.9.1",
-    "nodemon": "^1.18.4"
+    "ncp": "^2.0.0",
+    "script-file": "^0.8.0"
   }
 }

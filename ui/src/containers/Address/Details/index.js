@@ -35,7 +35,7 @@ const TABS = {
 
 class AddressDetails extends Component {
   state = {
-    currentTab: TABS.activity,
+    currentTab: TABS.transactions,
   };
 
   componentDidMount() {

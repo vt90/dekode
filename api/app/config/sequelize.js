@@ -2,7 +2,6 @@
  * Created by vladtomsa on 27/09/2018
  */
 const Sequelize = require('sequelize');
-// const argv = require('yargs').argv;
 let sequelizeInstance = null;
 
 const init = (app, cb) => {
@@ -18,22 +17,24 @@ const init = (app, cb) => {
         }
     } = app.get('config');
 
+    const dbDatabase = process.env['DB_DATABASE'] || database;
+    const dbHost = process.env['DB_HOST'] || host;
+    const dbUsername = process.env['DB_USERNAME'] || username;
+    const dbPassword = process.env['DB_PASSWORD'] || password;
+
     const sequelizeOptions = {
-        operatorsAliases: false,
-        host,
-        dialect,
-        port,
-        pool,
-        logging: null,
+      operatorsAliases: false,
+      host: dbHost,
+      dialect,
+      port,
+      pool,
+      logging: null,
     };
 
-    // const dbUsername = argv['DB_USERNAME'] || username;
-    // const dbPassword = argv['DB_PASSWORD'] || username;
-
     const sequelize = new Sequelize(
-        database,
-        username,
-        password,
+        dbDatabase,
+        dbUsername,
+        dbPassword,
         sequelizeOptions
     );
 
