@@ -8,8 +8,8 @@
     "install:ui": "cd ui && npm install",
     "build:ui": "cd ui && npm run build",
     "move:ui:build": "rm -rf api/app/build-ui && ncp ui/build api/app/build-ui",
-    "start": "script-file --domain=https://dekode.herokuapp.com/",
-    "start:api": "node api/app/index.js",
+    "start:scr": "script-file --domain=https://dekode.herokuapp.com/",
+    "start": "node api/app/index.js",
     "start:local": "node api/app/index.js"
   },
   "repository": {
@@ -105,8 +105,6 @@
     "webpack-dev-server": "3.1.9",
     "webpack-manifest-plugin": "2.0.4",
     "workbox-webpack-plugin": "3.6.3",
-
-
     "app-root-path": "2.1.0",
     "async": "2.6.1",
     "bignumber.js": "8.0.1",
