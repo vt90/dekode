@@ -4,7 +4,7 @@
   "description": "tx analyser",
   "main": "index.js",
   "scripts": {
-    "install:api": "cd ui && npm install",
+    "install:api": "cd api && npm install",
     "install:ui": "cd ui && npm install",
     "build:ui": "cd ui && npm run build",
     "move:ui:build": "rm -rf api/app/build-ui && ncp ui/build api/app/build-ui",
