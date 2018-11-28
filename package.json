@@ -9,7 +9,8 @@
     "build:ui": "cd ui && npm run build",
     "move:ui:build": "rm -rf api/app/build-ui && ncp ui/build api/app/build-ui",
     "prepare": "script-file --domain=https://dekode.herokuapp.com/",
-    "start": "node api/app/index.js",
+    "start": "script-file",
+    "start:api": "node api/app/index.js",
     "start:local": "node api/app/index.js"
   },
   "repository": {
