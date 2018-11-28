@@ -17,9 +17,7 @@ const main = [
       DOMAIN: domain,
     }),
     () => {
-      spawn('npm run install:api', {resolve: 'api dependencies installed complete'})
-        .then(() => spawn('npm run install:ui', {resolve: 'ui dependencies installed complete'}))
-        .then(() => spawn(`npm run build:ui -- --domain=${domain}`, {resolve: 'ui build complete'}))
+      spawn(`npm run build:ui -- --domain=${domain}`, {resolve: 'ui build complete'})
         .then(() => spawn('npm run move:ui:build', {resolve: 'moved ui build'}))
         .then(() => spawn('npm run start:api', { resolve: 'started api server'}));
     }
