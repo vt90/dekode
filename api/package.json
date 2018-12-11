@@ -1,11 +1,14 @@
 {
-  "name": "dekode-api",
+  "name": "dekodeapi",
   "version": "1.0.0",
-  "description": "tx analyser api",
   "main": "index.js",
-  "author": "chainnodes",
   "license": "ISC",
   "scripts": {
-    "start": "nodemon $NODE_DEBUG_OPTION app/index.js"
+    "build": "rimraf dist/ && babel src --out-dir dist/ --ignore *.spec.js --copy-files",
+    "prestart": "yarn docs",
+    "start": "nodemon --exec babel-node src/index.js --ignore tmp/* --ignore README",
+    "predocs": "rimraf public/swagger.json",
+    "docs": "apidoc-swagger -i src -o public/apidoc",
+    "postdocs": "cpx public/apidoc/swagger.json public/ && rimraf public/apidoc"
   }
 }

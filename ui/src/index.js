@@ -1,65 +1,24 @@
-/**
- * Created by vladtomsa on 26/09/2018
- */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import * as serviceWorker from './serviceWorker';
-import App from './App';
-
-// Redux dependencies
+import App from './containers/App';
 import {Provider} from 'react-redux';
-import {ConnectedRouter} from 'react-router-redux';
-import configureStore, {history} from './config/redux';
+import store from 'config/redux';
+import {JssProvider} from 'react-jss';
+import sheetsRegistry from 'config/sheetsRegistry';
+import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+import theme from 'config/theme';
 
-// Material UI dependencies
-import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
-import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import {createGenerateClassName, jssPreset} from '@material-ui/core/styles';
-import JssProvider from 'react-jss/lib/JssProvider';
-import MomentUtils from 'material-ui-pickers/utils/moment-utils';
-import {create} from 'jss';
-import customTheme from './config/theme';
+import './styles/global.css';
 
-// Global styles accessible from any component
-import 'styles/global.css';
-
-/**
- * Build configurations
- * */
-const generateClassName = createGenerateClassName();
-const jss = create(jssPreset());
-// We define a custom insertion point that JSS will look for injecting the styles in the DOM.
-jss.options.insertionPoint = document.getElementById('jss-insertion-point');
-
-
-// Create custom theme
-const theme = createMuiTheme(customTheme);
-
-// Create redux store
-const store = configureStore();
-
-
-const app = (
+const Root = (
     <Provider store={store}>
-        <JssProvider jss={jss} generateClassName={generateClassName}>
+        <JssProvider registry={sheetsRegistry}>
             <MuiThemeProvider theme={theme}>
-                <CssBaseline/>
-
-                <MuiPickersUtilsProvider utils={MomentUtils}>
-                    <ConnectedRouter history={history}>
-                        <App/>
-                    </ConnectedRouter>
-                </MuiPickersUtilsProvider>
+                <App/>
             </MuiThemeProvider>
         </JssProvider>
     </Provider>
 );
 
-ReactDOM.render(app, document.getElementById('root'));
+ReactDOM.render(Root, document.getElementById('root'));
 
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: http://bit.ly/CRA-PWA
-serviceWorker.unregister();

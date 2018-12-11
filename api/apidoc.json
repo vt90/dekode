@@ -1,0 +1,8 @@
+{
+  "name": "Dekod documentation",
+  "version": "1.0.0",
+  "description": "Dekode",
+  "template": {
+    "forceLanguage": "en"
+  }
+}

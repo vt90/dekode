@@ -1,60 +1,60 @@
 * {
-  font-family: 'Roboto Condensed', sans-serif !important;
+    font-family: 'Roboto Condensed', sans-serif !important;
 }
 
 a {
-  text-decoration: none !important;
-  color: inherit !important;
+    text-decoration: none !important;
+    color: inherit !important;
 }
 
 body {
-  /*background: url("/images/persona-background.jpg");*/
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
+    /*background: url("/images/persona-background.jpg");*/
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
 }
 
 .align-center {
-  align-items: center;
+    align-items: center;
 }
 
 .align-bottom {
-  align-items: flex-end;
+    align-items: flex-end;
 }
 
 .fill-flex {
-  flex: 1;
+    flex: 1;
 }
 
 .flex {
-  display: flex !important;
+    display: flex !important;
 }
 
 .justify-center {
-  justify-content: center;
+    justify-content: center;
 }
 
 .justify-end {
-  justify-content: flex-end;
+    justify-content: flex-end;
 }
 
 .space-between {
-  justify-content: space-between;
+    justify-content: space-between;
 }
 
 .space-around {
-  justify-content: space-around;
+    justify-content: space-around;
 }
 
 .text-center {
-  text-align: center;
+    text-align: center;
 }
 
 .wrap-content {
-  flex-wrap: wrap;
+    flex-wrap: wrap;
 }
 
 .clickable {
-  cursor: pointer;
+    cursor: pointer;
 }
 
