@@ -1,5 +1,12 @@
 import {Router} from 'express';
+import validate from 'express-validation';
 import * as AddressBusinessService from './address.business';
+import {
+    listAddresses,
+    createAddress,
+    verifyAddress,
+    updateAddressType,
+} from '../../validations/address.validation';
 
 const router = Router();
 
@@ -14,14 +21,71 @@ router
      *  @apiName getAddresses
      *  @apiGroup Addresses
      *
-     *  @apiSuccess {Array} addresses
+     * @apiSuccess {string}  message Success string message
+     * @apiSuccess {Object[]} data array data
+     *
      *
      */
-    .get(AddressBusinessService.list)
-    .post(AddressBusinessService.create);
+    .get(validate(listAddresses), AddressBusinessService.list)
+    /**
+     *  @api{post} /addresses Create addresses
+     *
+     *  @apiParam (Body) {String[]} addresses list of addresses
+     *  @apiParam (Body) {String} source addresses source
+     *  @apiParam (Body) {String} text source full text
+     *
+     *  @apiName getAddresses
+     *  @apiGroup Addresses
+     *
+     * @apiSuccess {string}  message Success string message
+     * @apiSuccess {Object[]} data array data
+     *
+     *
+     */
 
-router.route('/:id')
-    .post(AddressBusinessService.verifyAddress);
+    .post(validate(createAddress), AddressBusinessService.create);
+
+router
+    .route('/:id')
+    /**
+     *  @api{post} /addresses?isVerified Verify address
+     *
+     *  @apiParam (Body) {String[]} addresses list of addresses
+     *  @apiParam (Body) {String} source addresses source
+     *  @apiParam (Body) {String} text source full text
+     *
+     *  @apiName getAddresses
+     *  @apiGroup Addresses
+     *
+     * @apiSuccess {string}  message Success string message
+     * @apiSuccess {Object[]} data array data
+     *
+     *
+     */
+    .post(validate(verifyAddress), AddressBusinessService.verifyAddress);
+
+router
+    .route('/address/:address')
+    /**
+     *  @api{get} /addresses/address/:address Request address
+     *
+     *  @apiParam (Param) {String} address returns an address with sources populated
+     *
+     *  @apiName getAddress
+     *  @apiGroup Addresses
+     *
+     */
+    .get(AddressBusinessService.findAddress)
+    /**
+     *  @api{put} /addresses/address/:address Update address type
+     *
+     *  @apiParam (Param) {String} address returns an address with sources populated
+     *
+     *  @apiName getAddress
+     *  @apiGroup Addresses
+     *
+     */
+    .put(validate(updateAddressType), AddressBusinessService.updateAddressType);
 
 export default router;
 
