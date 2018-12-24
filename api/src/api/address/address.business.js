@@ -102,7 +102,7 @@ export const updateAddressType = async (req, res, next) => {
 
 export const verifyAddress = async (req, res, next) => {
     try {
-        const findAddress = (id) => Address.findOne({_id: id}).exec();
+        const findAddress = (id) => Address.findOne({_id: id, flag: 'black'}).exec();
         const updateAddress = ({_id}) =>
             Address.findOneAndUpdate({_id}, {$set: {credibility: req.body.credibility}}, {new: true}).exec();
         const notFoundAddress = () => throw new APIError({message: `Address not found`, status: httpStatus.NOT_FOUND});
