@@ -2,7 +2,7 @@
   "name": "dekodeapi",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "ISC",
+  "license": "ISIC",
   "scripts": {
     "build": "rimraf dist/ && babel src --out-dir dist/ --ignore *.spec.js --copy-files",
     "prestart": "yarn docs",
