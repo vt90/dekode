@@ -2,7 +2,7 @@
   "name": "dekodeapi",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "ISIC",
+  "license": "ISC",
   "scripts": {
     "start": "nodemon --exec babel-node src/index.js --ignore tmp/* --ignore README"
   }

@@ -2,7 +2,7 @@
   "name": "dekodeui",
   "version": "0.1.0",
   "private": true,
-  "license": "ISIC",
+  "license": "ISC",
   "scripts": {
     "start": "cross-env NODE_PATH=src react-scripts start",
     "build": "react-scripts build",

@@ -39,7 +39,7 @@ export const create = async (req, res, next) => {
         const returnSuccess = () => res.status(httpStatus.NO_CONTENT).send();
         await compose(
             ifElse(hasErrors, returnError, returnSuccess),
-            filter(Boolean),
+            filter(Boolean),// equivalent of lodash compact
             map(addOrUpdateAddress)
         )(addresses, sources);
     } catch (error) {
