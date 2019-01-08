@@ -8,10 +8,10 @@ import {compose, ifElse, not, map, filter} from 'conductor';
 
 export const create = async (req, res, next) => {
     try {
-        const {addresses, link, text} = req.body;
+        const {addresses, link, text, sourceName} = req.body;
         const sources = [];
         if (link && text) {
-            const source = await Source.findOrCreateSource({link, text});
+            const source = await Source.findOrCreateSource({link, text, sourceName});
             sources.push(source);
         }
         //TODO: use mongoose bulk create https://docs.mongodb.com/manual/reference/method/db.collection.bulkWrite
@@ -75,43 +75,79 @@ export const findAddress = async (req, res, next) => {
     }
 };
 
-export const updateAddressType = async (req, res, next) => {
+export const update = async (req, res, next) => {
     try {
-        if (req.params.address !== req.body.address) {
+        if (!req.body.type && !req.body.credibility) {
             // noinspection ExceptionCaughtLocallyJS
-            throw new APIError({message: `Body and param address don't match`, status: httpStatus.BAD_REQUEST})
-        }
-        const address = await Address.findOne({address: req.params.address}).exec();
-        if (!address) {
-            // noinspection ExceptionCaughtLocallyJS
-            throw new APIError({message: `Address not found`, status: httpStatus.NOT_FOUND})
-        }
-        if (address.type !== '-' && address.type !== req.body.type) {
-            // noinspection ExceptionCaughtLocallyJS
-            throw new APIError({
-                message: `Address already has type associated ${address.type}`,
+            throw  new APIError({
+                message: "Address type / credibility not specified",
                 status: httpStatus.BAD_REQUEST
             });
         }
-        address.type = req.body.type;
-        const updatedAddress = await Address.findOneAndUpdate({_id: address._id}, address, {new: true});
+        const findAddress = (address) => Address.findOne({address}).exec();
+        const notFoundAddress = () => throw new APIError({message: `Address not found`, status: httpStatus.NOT_FOUND});
+        const prepareAddressForUpdate = (address) => {
+            const {type, credibility} = req.body;
+            if ((type && type === address.type) && (credibility && credibility === address.credibility)) {
+                throw  new APIError({
+                    message: "Address type / credibility are the same",
+                    status: httpStatus.BAD_REQUEST
+                });
+            }
+            if (type) address.type = type;
+            if (credibility) address.credibility = credibility;
+            // NOTE: delete address.updatedAt is not working, in order to fix this I had to set it equal to undefined
+            address.updatedAt = undefined;
+            return address;
+        };
+        const updateAddress = (address) => {
+            console.log(`              updateAddress               `, address);
+            return Address.findOneAndUpdate({_id: address._id}, address, {new: true}).exec();
+        };
+        const updatedAddress = await compose(
+            updateAddress,
+            ifElse(not, notFoundAddress, prepareAddressForUpdate),
+            findAddress,
+        )(req.body.address);
         res.status(httpStatus.OK).json(updatedAddress);
     } catch (error) {
         next(error);
     }
 };
 
-export const verifyAddress = async (req, res, next) => {
+export const findAddressesSummary = async (req, res, next) => {
     try {
-        const findAddress = (id) => Address.findOne({_id: id, flag: 'black'}).exec();
-        const updateAddress = ({_id}) =>
-            Address.findOneAndUpdate({_id}, {$set: {credibility: req.body.credibility}}, {new: true}).exec();
-        const notFoundAddress = () => throw new APIError({message: `Address not found`, status: httpStatus.NOT_FOUND});
-        await compose(
-            ifElse(not, notFoundAddress, updateAddress),
-            findAddress
-        )(req.params.id);
-        res.status(httpStatus.NO_CONTENT).send();
+        // const x = await Address.summary();
+        const nrOfAddresses = await Address.countDocuments().exec();
+        const nrOfBlackListedAddresses = await Address.countDocuments({flag: 'black'}).exec();
+        const nrOfGrayListedAddresses = await Address.countDocuments({flag: 'gray'}).exec();
+        const nrOfSources = await Source.countDocuments().exec();
+        const result = {
+            // x,
+            nrOfAddresses,
+            nrOfBlackListedAddresses,
+            nrOfGrayListedAddresses,
+            nrOfSources
+        };
+
+        res.status(httpStatus.OK).json(result);
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const filterAddresses = async (req, res, next) => {
+    try {
+        const {term, type, flag, credibility} = req.body;
+        const pageNumber = +req.body.pageNumber || 1;
+        const pageSize = +req.body.pageSize || 25;
+        const {addresses, totalEntities} = await Address.filter({term, type, flag, credibility, pageNumber, pageSize});
+        res.status(httpStatus.OK).json({
+            pageNumber,
+            pageSize,
+            addresses,
+            totalEntities
+        });
     } catch (error) {
         next(error);
     }

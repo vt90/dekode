@@ -12,20 +12,27 @@ export const createAddress = {
     body: {
         addresses: Joi.array().items(Joi.string()).required(),
         link: Joi.string().uri(),
+        text: Joi.string(),
+        sourceName: Joi.string(),
     }
 };
 
-export const verifyAddress = {
-    params: {
-        id: Joi.string().required(),
-    },
+export const updateAddress = {
     body: {
-        credibility: Joi.string().valid(AddressModel.schema.path('credibility').enumValues).required()
+        address: Joi.string().min(25).max(34).required(),
+        type: Joi.string().valid(AddressModel.schema.path('type').enumValues),
+        credibility: Joi.string().valid(AddressModel.schema.path('credibility').enumValues)
     }
 };
 
-export const updateAddressType = {
+export const filterAddresses = {
     body: {
-        type: Joi.string().valid(AddressModel.schema.path('type').enumValues)
+        // term: Joi.string().min(2).max(34),
+        term: Joi.string().max(34),
+        flag: Joi.string().valid(AddressModel.schema.path('flag').enumValues),
+        type: Joi.string().valid(AddressModel.schema.path('type').enumValues),
+        credibility: Joi.string().valid(AddressModel.schema.path('credibility').enumValues),
+        pageNumber: Joi.number().min(1),
+        pageSize: Joi.number().min(1),
     }
 };
