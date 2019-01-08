@@ -27,5 +27,7 @@ export const connect = async () => {
         keepAlive: 1,
         useNewUrlParser: true,
         useCreateIndex: true,
+        useFindAndModify: false
     });
+
 };

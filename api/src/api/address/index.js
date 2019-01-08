@@ -4,11 +4,12 @@ import * as AddressBusinessService from './address.business';
 import {
     listAddresses,
     createAddress,
-    verifyAddress,
-    updateAddressType,
+    updateAddress,
+    filterAddresses,
 } from '../../validations/address.validation';
 
-const router = Router();
+const
+    router = Router();
 
 router
     .route('/')
@@ -42,13 +43,9 @@ router
      *
      *
      */
-
-    .post(validate(createAddress), AddressBusinessService.create);
-
-router
-    .route('/:id')
+    .post(validate(createAddress), AddressBusinessService.create)
     /**
-     *  @api{post} /addresses?isVerified Verify address
+     *  @api{post} /addresses Create addresses
      *
      *  @apiParam (Body) {String[]} addresses list of addresses
      *  @apiParam (Body) {String} source addresses source
@@ -62,7 +59,7 @@ router
      *
      *
      */
-    .post(validate(verifyAddress), AddressBusinessService.verifyAddress);
+    .put(validate(updateAddress), AddressBusinessService.update);
 
 router
     .route('/address/:address')
@@ -75,17 +72,28 @@ router
      *  @apiGroup Addresses
      *
      */
-    .get(AddressBusinessService.findAddress)
+    .get(AddressBusinessService.findAddress);
+router
+    .route('/filter')
     /**
-     *  @api{put} /addresses/address/:address Update address type
+     *  @api{get} /addresses/summary Retrieve informations about adresses
      *
-     *  @apiParam (Param) {String} address returns an address with sources populated
-     *
-     *  @apiName getAddress
+     *  @apiName getAddressesSummary
      *  @apiGroup Addresses
      *
      */
-    .put(validate(updateAddressType), AddressBusinessService.updateAddressType);
+    .post(validate(filterAddresses),AddressBusinessService.filterAddresses);
+
+router
+    .route('/summary')
+    /**
+     *  @api{get} /addresses/summary Retrieve informations about adresses
+     *
+     *  @apiName getAddressesSummary
+     *  @apiGroup Addresses
+     *
+     */
+    .get(AddressBusinessService.findAddressesSummary);
 
 export default router;
 

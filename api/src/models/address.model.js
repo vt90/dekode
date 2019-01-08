@@ -2,6 +2,7 @@ import httpStatus from 'http-status';
 import {Schema, model} from 'mongoose';
 import Source from './source.model';
 import ApiError from "../misc/ApiError";
+import escapeRegex from '../misc/escapeRegex';
 // import Context from './context.model';
 // import logger from '../config/logger';
 
@@ -44,7 +45,7 @@ const addressSchema = Schema({
         ref: Source,
     }]
 
-});
+}, {timestamps: true});
 
 addressSchema.statics = {
 
@@ -63,6 +64,8 @@ addressSchema.statics = {
                         }
                         existingAddress.sources.push(...address.sources);
                     }
+                    // NOTE: delete address.updatedAt is not working, in order to fix this I had to set it equal to undefined
+                    existingAddress.updatedAt = undefined;
                     return this.findOneAndUpdate({_id: existingAddress._id}, existingAddress).exec()
                 }
             } else {
@@ -79,8 +82,8 @@ addressSchema.statics = {
     async findAddress({address}) {
         try {
             const result = await this.findOne({address})
-                .populate('sources')
-                .select('-__v')
+                .populate('sources', {__v: 0})
+                .select(['-__v', '-_id'])
                 .exec();
             if (!result) {
                 // noinspection ExceptionCaughtLocallyJS
@@ -95,9 +98,8 @@ addressSchema.statics = {
         }
     },
 
-    async list({pageNumber, pageSize}) {
+    async list({pageNumber, pageSize, options = {}}) {
         try {
-            const options = {};
             const select = ['-sources', '-__v', '-_id'];
             const addresses = await this.find(options)
                 .skip((pageNumber - 1) * pageSize)
@@ -105,7 +107,7 @@ addressSchema.statics = {
                 .sort({createdAt: -1})
                 .select(select)
                 .exec();
-            const totalEntities = await this.count();
+            const totalEntities = await this.countDocuments(options).exec();
             return {addresses, totalEntities};
         } catch (error) {
             throw error;
@@ -153,29 +155,42 @@ addressSchema.statics = {
         //     .exec();
     },
 
-    async verifyAddress(id) {
-        // const existingAddress = await this.findOne({_id: Types.ObjectId(id)}).exec();
-        // if (!existingAddress) {
-        //     throw  new APIError({
-        //         message: "Address not found!",
-        //         status: httpStatus.NOT_FOUND
-        //     });
-        // }
-        // if (existingAddress.status === 'black') {
-        //     throw  new APIError({
-        //         message: "Invalid operation, current address is already blacklisted",
-        //         status: httpStatus.FORBIDDEN
-        //     });
-        // }
-        // existingAddress.isVerified = true;
-        // if (existingAddress.status === 'white') {
-        //     existingAddress.status = 'grey';
-        // } else {
-        //     existingAddress.status = 'black';
-        // }
-        //
-        // return this.findOneAndUpdate({_id: Types.ObjectId(existingAddress._id)}, existingAddress, {new: true});
+    filter({
+               term,
+               type,
+               flag,
+               credibility,
+               pageNumber,
+               pageSize
+           }) {
+        try {
+            const options = {};
+            if (term) options.address = new RegExp(escapeRegex(term), 'gi');
+            if (type) options.type = {'$eq': type};
+            if (flag) options.flag = {'$eq': flag};
+            if (credibility) options.credibility = {'$eq': credibility};
+            return this.list({pageNumber, pageSize, options});
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    summary() {
+        // return this.aggregate([
+        //     {
+        //         "$match": {
+        //             flag: "black",
+        //         },
+        //     },
+        //     {
+        //         "$group": {
+        //             "flag": "$flag",
+        //             count: {"$sum": 1}
+        //         }
+        //     }
+        // ])
     }
+
 };
 
 export default model('Address', addressSchema);
