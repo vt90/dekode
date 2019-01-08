@@ -95,16 +95,18 @@ addressSchema.statics = {
         }
     },
 
-    list({pageNumber, pageSize}) {
+    async list({pageNumber, pageSize}) {
         try {
             const options = {};
-            const select = ['-sources', '-__v'];
-            return this.find(options)
+            const select = ['-sources', '-__v', '-_id'];
+            const addresses = await this.find(options)
                 .skip((pageNumber - 1) * pageSize)
                 .limit(pageSize)
                 .sort({createdAt: -1})
                 .select(select)
                 .exec();
+            const totalEntities = await this.count();
+            return {addresses, totalEntities};
         } catch (error) {
             throw error;
         }

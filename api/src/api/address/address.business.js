@@ -30,7 +30,7 @@ export const create = async (req, res, next) => {
                 return ({
                     address: address,
                     message: `Could not insert or update ${address}`,
-                    reason: `${reason}`,
+                    reason: `${e}`,
                 });
             }
         };
@@ -39,7 +39,7 @@ export const create = async (req, res, next) => {
         const returnSuccess = () => res.status(httpStatus.NO_CONTENT).send();
         await compose(
             ifElse(hasErrors, returnError, returnSuccess),
-            filter(Boolean),
+            filter(Boolean),// equivalent of lodash compact
             map(addOrUpdateAddress)
         )(addresses, sources);
     } catch (error) {
@@ -51,11 +51,12 @@ export const list = async (req, res, next) => {
     try {
         const pageNumber = +req.query.pageNumber || 1;
         const pageSize = +req.query.pageSize || 25;
-        const addresses = await Address.list({pageNumber, pageSize});
+        const {addresses, totalEntities} = await Address.list({pageNumber, pageSize});
         res.status(httpStatus.OK).json({
             pageNumber,
             pageSize,
-            addresses
+            addresses,
+            totalEntities
         });
     } catch (error) {
         next(error);
@@ -102,7 +103,7 @@ export const updateAddressType = async (req, res, next) => {
 
 export const verifyAddress = async (req, res, next) => {
     try {
-        const findAddress = (id) => Address.findOne({_id: id}).exec();
+        const findAddress = (id) => Address.findOne({_id: id, flag: 'black'}).exec();
         const updateAddress = ({_id}) =>
             Address.findOneAndUpdate({_id}, {$set: {credibility: req.body.credibility}}, {new: true}).exec();
         const notFoundAddress = () => throw new APIError({message: `Address not found`, status: httpStatus.NOT_FOUND});
