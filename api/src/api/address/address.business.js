@@ -30,7 +30,7 @@ export const create = async (req, res, next) => {
                 return ({
                     address: address,
                     message: `Could not insert or update ${address}`,
-                    reason: `${reason}`,
+                    reason: `${e}`,
                 });
             }
         };
@@ -51,11 +51,12 @@ export const list = async (req, res, next) => {
     try {
         const pageNumber = +req.query.pageNumber || 1;
         const pageSize = +req.query.pageSize || 25;
-        const addresses = await Address.list({pageNumber, pageSize});
+        const {addresses, totalEntities} = await Address.list({pageNumber, pageSize});
         res.status(httpStatus.OK).json({
             pageNumber,
             pageSize,
-            addresses
+            addresses,
+            totalEntities
         });
     } catch (error) {
         next(error);

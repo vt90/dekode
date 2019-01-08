@@ -9,11 +9,13 @@ export default function readBlock(fd, position) {
     };
     const [, nextPosition, header] = readBlockHeader(fd, position);
     block.header = header;
+    console.log('header ', block.header);
     let pos = nextPosition;
     while (block.transactions.length < header.transactionsCount) {
         const [, nextPosition, transaction] = readTransaction(fd, pos);
         pos = nextPosition;
         block.transactions.push(transaction);
+        console.log('transaction ', transaction);
         const [height, nextBlockPosition] = readSync(fd, 4, pos);
         block.height = height;
         pos = nextBlockPosition;

@@ -17,6 +17,7 @@ const readOutputScriptLength = ([fd, position, result]) => {
 };
 
 const readTransactionOutScript = ([fd, position, result]) => {
+    console.log(` readTransactionOutScript  `, result);
     const [script, nextPosition] = readSync(fd, result.scriptLength, position);
     result.script = script;
     return [fd, nextPosition, result];

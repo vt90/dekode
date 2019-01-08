@@ -2,7 +2,7 @@ import fs from 'fs';
 import readBlock from './readBlock';
 
 const getPath = blk => `E:\\bitcoin\\${blk}.dat`;
-const fd = fs.openSync(getPath('blk01187'), 'r+');
+const fd = fs.openSync(getPath('blk00001'), 'r+');
 
 let index = 0;
 let pos = 0;

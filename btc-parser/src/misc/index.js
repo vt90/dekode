@@ -22,10 +22,10 @@ export function readSync(fd, length, position) {
     console.log(` read length : `, read, ' position : ', position, " result ", buffer.toString('hex'));
     const result = endianness(buffer.toString('hex'));
     console.timeEnd('readSync');
-    if (read === 0) {
-        //TODO BOGDAN : add EOF exception
-        throw new Error('End of File');
-    }
+    // if (read === 0) {
+    //     //TODO BOGDAN : add EOF exception
+    //     throw new Error('End of File');
+    // }
     return [
         result,
         position + read,
