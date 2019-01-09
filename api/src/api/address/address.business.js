@@ -120,7 +120,7 @@ export const findAddressesSummary = async (req, res, next) => {
         // const x = await Address.summary();
         const nrOfAddresses = await Address.countDocuments().exec();
         const nrOfBlackListedAddresses = await Address.countDocuments({flag: 'black'}).exec();
-        const nrOfGrayListedAddresses = await Address.countDocuments({flag: 'gray'}).exec();
+        const nrOfGrayListedAddresses = await Address.countDocuments({flag: 'grey'}).exec();
         const nrOfSources = await Source.countDocuments().exec();
         const result = {
             // x,
