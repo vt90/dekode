@@ -2,6 +2,11 @@ import {Schema, model} from 'mongoose';
 
 const sourceSchema = Schema({
 
+    sourceName: {
+        type: String,
+        trim: true,
+    },
+
     link: {
         index: true,
         type: String,
@@ -15,7 +20,7 @@ const sourceSchema = Schema({
         trim: true,
     },
 
-});
+}, {timestamps: {createdAt: 'createdDate', updatedAt: 'updatedDate'}});
 
 sourceSchema.statics = {
 
