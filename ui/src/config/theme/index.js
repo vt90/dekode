@@ -4,7 +4,20 @@ import red from '@material-ui/core/colors/red';
 
 const error = red;
 
-const themeOverrides = {};
+const themeOverrides = {
+    MuiTooltip: {
+        tooltip: {
+            fontSize: 14,
+            padding: 8,
+            textAlign: 'justify',
+        },
+    },
+    MuiTypography: {
+        h4: {
+            fontWeight: 300,
+        },
+    },
+};
 
 export default createMuiTheme({
     palette: {
@@ -23,4 +36,7 @@ export default createMuiTheme({
         background: {default: '#F7F7F7'},
     },
     overrides: themeOverrides,
+    typography: {
+        useNextVariants: true,
+    },
 });

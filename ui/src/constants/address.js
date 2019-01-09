@@ -8,5 +8,15 @@ export const addressesConstants = {
     VERIFY_ADDRESS_REQUEST: "@address/VERIFY_ADDRESS_REQUEST",
     VERIFY_ADDRESS_SUCCESS: "@address/VERIFY_ADDRESS_SUCCESS",
     VERIFY_ADDRESS_FAIL: "@address/VERIFY_ADDRESS_FAIL",
+};
 
+export const CREDIBILITY_TYPES = {
+  VERIFIED: 'verified',
+  NOT_VERIFIED: 'not verified',
+};
+
+export const FLAG_TYPES = {
+  WHITE: 'white',
+  GREY: 'grey',
+  Black: 'black',
 };

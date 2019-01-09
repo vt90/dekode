@@ -1,12 +1,18 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import compose from 'lodash/fp/compose';
+
+import { withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+
 import {
     getAddresses,
     verifyAddress
 } from 'actions/address';
+import Header from 'components/Address/Header';
 import List from 'components/Address/List';
-import Button from '@material-ui/core/Button';
+import styles from './styles';
 
 class Address extends React.Component {
 
@@ -25,26 +31,42 @@ class Address extends React.Component {
     };
 
     render() {
+        const { classes } = this.props;
         return (
-            <div>
-                <Button
+            <React.Fragment>
+                <button
                     onClick={this.fetchVerifiedAddresses}
                     color={"primary"}
                 >
                     fetch verified addresses
-                </Button>
-                <Button
+                </button>
+                <button
                     onClick={this.fetchUnverifiedAddresses}
                     color={"primary"}
                 >
                     fetch unverified addresses
-                </Button>
-                <List
-                    addresses={this.props.addresses}
-                    isVerified={this.props.isVerified}
-                    verifyAddress={this.verifyAddress}
-                />
-            </div>
+                </button>
+                <section className={classes.headerSection}>
+                    hello
+                </section>
+
+                <Grid container justify="center">
+                    <Grid item xs={11} md={10} lg={9}>
+                        <Paper
+                            className={classes.addressListSection}
+                            component="section"
+                            elevation={12}
+                        >
+                            <Header/>
+                            <List
+                                addresses={this.props.addresses}
+                                isVerified={this.props.isVerified}
+                                verifyAddress={this.verifyAddress}
+                            />
+                        </Paper>
+                    </Grid>
+                </Grid>
+            </React.Fragment>
         );
     }
 
@@ -69,5 +91,6 @@ const mapDispatchToProps = {
 };
 
 export default compose(
-    connect(mapStateToProps, mapDispatchToProps)
+    connect(mapStateToProps, mapDispatchToProps),
+    withStyles(styles),
 )(Address);

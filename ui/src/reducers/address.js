@@ -1,7 +1,7 @@
 import {addressesConstants} from 'constants/address';
 
 const initialState = () => ({
-    addresses: null,
+    addresses: [],
     isLoading: false,
     isVerified: true,
 });
@@ -15,7 +15,7 @@ reduce[addressesConstants.GET_ADDRESS_REQUEST] = (state) => ({
 
 reduce[addressesConstants.GET_ADDRESS_SUCCESS] = (state, action) => ({
     ...state,
-    addresses: action.payload,
+    addresses: action.payload.addresses,
     isLoading: false,
 });
 
