@@ -121,13 +121,14 @@ export const findAddressesSummary = async (req, res, next) => {
         const nrOfAddresses = await Address.countDocuments().exec();
         const nrOfBlackListedAddresses = await Address.countDocuments({flag: 'black'}).exec();
         const nrOfGrayListedAddresses = await Address.countDocuments({flag: 'grey'}).exec();
+        const nrOfVerifiedAddresses = await Address.countDocuments({credibility: 'verified'}).exec();
         const nrOfSources = await Source.countDocuments().exec();
         const result = {
-            // x,
             nrOfAddresses,
             nrOfBlackListedAddresses,
             nrOfGrayListedAddresses,
-            nrOfSources
+            nrOfVerifiedAddresses,
+            nrOfSources,
         };
 
         res.status(httpStatus.OK).json(result);

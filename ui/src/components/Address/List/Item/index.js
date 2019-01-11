@@ -1,7 +1,8 @@
 /**
  * Created by vladtomsa on 09/01/2019
  */
-import React, { useState } from 'react';
+import React from 'react';
+import { Link } from 'react-router-dom'
 import compose from 'lodash/fp/compose';
 import BlackFlag from 'mdi-material-ui/Flag';
 import GreyFlag from 'mdi-material-ui/FlagOutline';
@@ -28,8 +29,6 @@ const flagIcon = {
 };
 
 const AddressListItem = ({address, classes, divider, index, width}) => {
-    // const [isSelected, setSelected] = useState(false);
-
     const SmallListItemSection = ({label, children}) => (
         <div className={`flex align-center ${width === 'xs' || width === 'sm' ? '' : 'justify-center'}`}>
             <Hidden mdUp>
@@ -48,18 +47,18 @@ const AddressListItem = ({address, classes, divider, index, width}) => {
 
     return (
         <ListItem
+            button
             component="div"
             divider={!!divider}
             key={address.address}
-            // onMouseEnter={() => setSelected(true)}
-            // onMouseLeave={() => setSelected(false)}
-            // selected={isSelected}
         >
             <Grid container justify="space-between" alignItems="center">
                 <Grid item xs={12} md={true}>
-                    <Typography variant="subtitle2">
-                        {address.address}
-                    </Typography>
+                    <Link to={`/address/${address.address}`}>
+                        <Typography variant="subtitle2">
+                            {address.address}
+                        </Typography>
+                    </Link>
                 </Grid>
                 <Grid item xs={12} md={2}>
                     <SmallListItemSection label="Type">

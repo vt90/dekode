@@ -12,6 +12,7 @@ export default () => {
         },
         filter: {
             background: '#EEE',
+            padding: 0,
         },
         expansionPanelSummary: {
             paddingLeft: 16,

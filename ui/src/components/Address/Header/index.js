@@ -11,11 +11,12 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import Typography from '@material-ui/core/Typography';
-import Close from '@material-ui/icons/Close';
-import Search from '@material-ui/icons/Search';
+import Close from 'mdi-material-ui/Close';
+import Search from 'mdi-material-ui/Magnify';
+import Filter from '../Filter';
 import styles from './styles';
 
-const AddressesHeader = ({ classes }) => {
+const AddressesHeader = ({ classes, initialValues, onFilterSubmit }) => {
     const [isExpandend, setExpanded] = useState(false);
 
     return (
@@ -34,10 +35,10 @@ const AddressesHeader = ({ classes }) => {
                <ExpansionPanelDetails className={classes.expansionPanelDetails}>
                    <Card square className={classes.filter}>
                        <CardContent>
-                           <Typography>
-                               Nulla facilisi. Phasellus sollicitudin nulla et quam mattis feugiat. Aliquam eget
-                               maximus est, id dignissim quam.
-                           </Typography>
+                           <Filter
+                               initialValues={initialValues}
+                               onSubmit={onFilterSubmit}
+                           />
                        </CardContent>
                    </Card>
                </ExpansionPanelDetails>

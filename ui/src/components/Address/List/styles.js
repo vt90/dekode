@@ -8,12 +8,23 @@ export default (theme) => {
             color: theme.palette.text.hint,
         },
         root: {
+            [theme.breakpoints.down('md')]: {
+                marginTop: 80,
+            },
+            [theme.breakpoints.up('lg')]: {
+                maxHeight: 'calc(80vh - 40px)',
+                overflowY: 'scroll',
+            },
             '& ul': {
                 padding: 0,
             },
         },
         subheader: {
             backgroundColor: theme.palette.background.paper,
+            padding: 0,
+        },
+        tableHeader: {
+            padding: '4px 16px',
         },
     };
 };

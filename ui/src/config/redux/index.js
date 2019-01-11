@@ -1,15 +1,23 @@
 import {createStore, combineReducers, applyMiddleware, compose} from 'redux';
+import { createBrowserHistory } from 'history';
+import { connectRouter, routerMiddleware } from 'connected-react-router';
+import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
 import reducers from 'reducers';
 
+export const history = createBrowserHistory();
+
 export const rootReducer = combineReducers({
     ...reducers,
+    form: formReducer,
+    router: connectRouter(history),
 });
 
 const configureStore = (initialState) => {
 
     const middleware = [
+        routerMiddleware(history),
         thunk,
     ];
 
@@ -32,6 +40,4 @@ const configureStore = (initialState) => {
     );
 };
 
-const store = configureStore();
-
-export default store;
+export default configureStore;
