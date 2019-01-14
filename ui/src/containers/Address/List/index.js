@@ -13,7 +13,6 @@ import {
     getAddresses,
     getAddressesSummary,
     toggleCreateOpen,
-    verifyAddress,
 } from 'actions/address';
 import Create from 'components/Address/Create/index';
 import List from 'components/Address/List/index';
@@ -110,7 +109,7 @@ class Address extends Component {
                                 >
                                     {
                                         isLoading && isLoading[addressesConstants.GET_ADDRESS_SUMMARY_REQUEST]
-                                            ? <Loading/>
+                                            ? <Loading message="Generating summary"/>
                                             : (
                                                 <SummaryReport
                                                     nrOfAddresses={nrOfAddresses}
@@ -127,7 +126,7 @@ class Address extends Component {
                         <Grid item xs={11} lg={7} xl={5}>
                             {
                                 isLoading && isLoading[addressesConstants.GET_ADDRESS_REQUEST]
-                                    ? <Loading/>
+                                    ? <Loading message="Fetching addresses"/>
                                     : (
                                         <Paper
                                             component="section"
@@ -214,7 +213,6 @@ const mapDispatchToProps = {
     getAddresses,
     getAddressesSummary,
     toggleCreateOpen,
-    verifyAddress,
 };
 
 export default compose(

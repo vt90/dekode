@@ -48,17 +48,16 @@ const AddressListItem = ({address, classes, divider, index, width}) => {
     return (
         <ListItem
             button
-            component="div"
+            component={Link}
+            to={`/address/${address.address}`}
             divider={!!divider}
             key={address.address}
         >
             <Grid container justify="space-between" alignItems="center">
                 <Grid item xs={12} md={true}>
-                    <Link to={`/address/${address.address}`}>
-                        <Typography variant="subtitle2">
-                            {address.address}
-                        </Typography>
-                    </Link>
+                    <Typography variant="subtitle2">
+                        {address.address}
+                    </Typography>
                 </Grid>
                 <Grid item xs={12} md={2}>
                     <SmallListItemSection label="Type">

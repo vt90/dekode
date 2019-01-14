@@ -5,6 +5,7 @@ const initialState = () => ({
     isCreateOpen: false,
     isLoading: {},
     addresses: [],
+    selectedAddress: null,
     pageNumber: 1,
     pageSize: 25,
     totalEntities: 0,
@@ -31,6 +32,23 @@ reduce[addressesConstants.GET_ADDRESS_SUCCESS] = (state, action) => ({
 reduce[addressesConstants.GET_ADDRESS_FAIL] = (state) => ({
     ...state,
     isLoading: { ...state.isLoading, [addressesConstants.GET_ADDRESS_REQUEST] : false }
+});
+
+reduce[addressesConstants.GET_ADDRESS_BY_ADDRESS_REQUEST] = (state) => ({
+    ...state,
+    selectedAddress: null,
+    isLoading: { ...state.isLoading, [addressesConstants.GET_ADDRESS_BY_ADDRESS_REQUEST] : true }
+});
+
+reduce[addressesConstants.GET_ADDRESS_BY_ADDRESS_SUCCESS] = (state, action) => ({
+    ...state,
+    selectedAddress: action.payload,
+    isLoading: { ...state.isLoading, [addressesConstants.GET_ADDRESS_BY_ADDRESS_REQUEST] : false }
+});
+
+reduce[addressesConstants.GET_ADDRESS_BY_ADDRESS_FAIL] = (state) => ({
+    ...state,
+    isLoading: { ...state.isLoading, [addressesConstants.GET_ADDRESS_BY_ADDRESS_REQUEST] : false }
 });
 
 reduce[addressesConstants.GET_ADDRESS_SUMMARY_REQUEST] = (state) => ({
