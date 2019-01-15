@@ -16,6 +16,7 @@
     "@material-ui/icons": "3.0.2",
     "@reach/router": "1.2.1",
     "axios": "0.18.0",
+    "bitcoin-core": "2.0.0",
     "body-parser": "1.18.3",
     "classnames": "2.2.6",
     "compression": "1.7.3",
