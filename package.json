@@ -65,7 +65,8 @@
     "start:ui": "cd ui && yarn start",
     "start:api": "cd api && yarn start",
     "build:api": "cd api && yarn build",
-    "start:parser": "cd btc-parser && yarn start"
+    "start:parser": "cd btc-parser && yarn start",
+    "build:parser": "cd btc-parser && yarn build"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",
