@@ -42,8 +42,8 @@
     "mongoose": "5.4.7",
     "morgan": "1.9.1",
     "prop-types": "15.6.2",
-    "react": "16.7.0",
-    "react-dom": "16.7.0",
+    "react": "16.7.0-alpha.2",
+    "react-dom": "16.7.0-alpha.2",
     "react-jss": "8.6.1",
     "react-loadable": "5.5.0",
     "react-redux": "6.0.0",
@@ -59,14 +59,18 @@
     "redux-form": "8.1.0",
     "redux-thunk": "2.3.0",
     "wallet-address-validator": "0.2.4",
-    "winston": "3.2.1"
+    "winston": "3.2.1",
+    "swagger-ui-express": "4.0.2",
+    "apidoc-swagger": "0.3.0"
   },
   "scripts": {
     "start:ui": "cd ui && yarn start",
     "start:api": "cd api && yarn start",
     "build:api": "cd api && yarn build",
     "start:parser": "cd btc-parser && yarn start",
-    "build:parser": "cd btc-parser && yarn build"
+    "build:parser": "cd btc-parser && yarn build",
+    "build:ui": "cd ui && yarn run build",
+    "build": "rimraf ../build && cd api && yarn run build && ncp dist ../../build && rimraf dist/ && ncp public ../../build/public && cd .. && cd ui && yarn run build && ncp build ../../build/build-ui && rimraf build && cd .. && cpx package.json ../build && cd ../build && yarn install --prod"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",
@@ -76,12 +80,11 @@
     "@babel/plugin-proposal-throw-expressions": "7.2.0",
     "@babel/plugin-transform-async-to-generator": "7.2.0",
     "@babel/preset-env": "7.3.1",
-    "apidoc-swagger": "0.3.0",
     "cpx": "1.5.0",
     "cross-env": "5.2.0",
+    "ncp": "2.0.0",
     "nodemon": "1.18.9",
     "opn-cli": "4.0.0",
-    "rimraf": "2.6.3",
-    "swagger-ui-express": "4.0.2"
+    "rimraf": "2.6.3"
   }
 }

@@ -40,6 +40,12 @@ const addressSchema = Schema({
         default: 'not verified'
     },
 
+    tags: {
+        type: [{
+            type: String,
+        }],
+    },
+
     sources: [{
         type: Schema.Types.ObjectId,
         ref: Source,

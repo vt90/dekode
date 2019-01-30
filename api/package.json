@@ -4,11 +4,12 @@
   "main": "index.js",
   "license": "ISC",
   "scripts": {
-    "build": "rimraf dist/ && babel src --out-dir dist/ --ignore *.spec.js --copy-files",
+    "prebuild": "yarn docs",
+    "build": "rimraf dist/ && babel src --out-dir dist/ --ignore *.spec.js --copy-files && cpx .env dist/ && cpx .env.example dist/",
     "prestart": "yarn docs",
     "start": "nodemon --exec babel-node src/index.js --ignore tmp/* --ignore README",
-    "predocs": "rimraf public/swagger.json",
+    "predocs": "rimraf src/public/swagger.json",
     "docs": "apidoc-swagger -i src -o public/apidoc",
-    "postdocs": "cpx public/apidoc/swagger.json public/ && rimraf public/apidoc"
+    "postdocs": "cpx public/apidoc/swagger.json src/public/ && rimraf public/apidoc"
   }
 }
