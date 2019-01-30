@@ -1,6 +1,7 @@
 import http from 'config/http';
 import {ADDRESS_API} from 'constants/api-routes';
 import {addressesConstants} from 'constants/address';
+
 export const create = (data) => http.post(`${ADDRESS_API}`, data);
 export const get = (id, params) => id ? http.get(`${ADDRESS_API}/address/${id}`) : http.post(`${ADDRESS_API}/filter`, params);
 export const verify = (id) => http.post(`${ADDRESS_API}/${id}`);
@@ -11,7 +12,6 @@ export const getAddress = (address) => async (dispatch) => {
         const result = await get(address);
         dispatch(getAddressSuccess(result));
     } catch (error) {
-        //ignore
         dispatch(getAddressFail(error));
     }
 };
@@ -28,7 +28,6 @@ export const getAddresses = (params = {}) => async dispatch => {
         const result = await get(null, searchParams);
         dispatch(getAddressesSuccess(result));
     } catch (error) {
-        //ignore
         dispatch(getAddressesFail(error));
     }
 };
@@ -39,7 +38,6 @@ export const getAddressesSummary = () => async dispatch => {
         const result = await http.get(`${ADDRESS_API}/summary`);
         dispatch(getAddressesSummarySuccess(result));
     } catch (error) {
-        //ignore
         dispatch(getAddressesSummaryFail(error));
     }
 };
@@ -52,7 +50,6 @@ export const createAddresses = (data) => async (dispatch) => {
         dispatch(toggleCreateOpen(false));
         // ToDo call getAddresses with new filterw
     } catch (error) {
-        //ignore
         dispatch(createAddressesFail(error));
     }
 };

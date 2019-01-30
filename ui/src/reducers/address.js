@@ -20,46 +20,46 @@ const reduce = {};
 
 reduce[addressesConstants.GET_ADDRESS_REQUEST] = (state) => ({
     ...state,
-    isLoading: { ...state.isLoading, [addressesConstants.GET_ADDRESS_REQUEST] : true }
+    isLoading: {...state.isLoading, [addressesConstants.GET_ADDRESS_REQUEST]: true}
 });
 
 reduce[addressesConstants.GET_ADDRESS_SUCCESS] = (state, action) => ({
     ...state,
     ...action.payload,
-    isLoading: { ...state.isLoading, [addressesConstants.GET_ADDRESS_REQUEST] : false }
+    isLoading: {...state.isLoading, [addressesConstants.GET_ADDRESS_REQUEST]: false}
 });
 
 reduce[addressesConstants.GET_ADDRESS_FAIL] = (state) => ({
     ...state,
-    isLoading: { ...state.isLoading, [addressesConstants.GET_ADDRESS_REQUEST] : false }
+    isLoading: {...state.isLoading, [addressesConstants.GET_ADDRESS_REQUEST]: false}
 });
 
 reduce[addressesConstants.GET_ADDRESS_BY_ADDRESS_REQUEST] = (state) => ({
     ...state,
     selectedAddress: null,
-    isLoading: { ...state.isLoading, [addressesConstants.GET_ADDRESS_BY_ADDRESS_REQUEST] : true }
+    isLoading: {...state.isLoading, [addressesConstants.GET_ADDRESS_BY_ADDRESS_REQUEST]: true}
 });
 
 reduce[addressesConstants.GET_ADDRESS_BY_ADDRESS_SUCCESS] = (state, action) => ({
     ...state,
     selectedAddress: action.payload,
-    isLoading: { ...state.isLoading, [addressesConstants.GET_ADDRESS_BY_ADDRESS_REQUEST] : false }
+    isLoading: {...state.isLoading, [addressesConstants.GET_ADDRESS_BY_ADDRESS_REQUEST]: false}
 });
 
 reduce[addressesConstants.GET_ADDRESS_BY_ADDRESS_FAIL] = (state) => ({
     ...state,
-    isLoading: { ...state.isLoading, [addressesConstants.GET_ADDRESS_BY_ADDRESS_REQUEST] : false }
+    isLoading: {...state.isLoading, [addressesConstants.GET_ADDRESS_BY_ADDRESS_REQUEST]: false}
 });
 
 reduce[addressesConstants.GET_ADDRESS_SUMMARY_REQUEST] = (state) => ({
     ...state,
-    isLoading: { ...state.isLoading, [addressesConstants.GET_ADDRESS_SUMMARY_REQUEST] : true }
+    isLoading: {...state.isLoading, [addressesConstants.GET_ADDRESS_SUMMARY_REQUEST]: true}
 });
 
 reduce[addressesConstants.GET_ADDRESS_SUMMARY_SUCCESS] = (state, action) => ({
     ...state,
     ...action.payload,
-    isLoading: { ...state.isLoading, [addressesConstants.GET_ADDRESS_SUMMARY_REQUEST] : false }
+    isLoading: {...state.isLoading, [addressesConstants.GET_ADDRESS_SUMMARY_REQUEST]: false}
 });
 
 reduce[addressesConstants.GET_ADDRESS_SUMMARY_FAIL] = (state) => ({
@@ -79,17 +79,17 @@ reduce[addressesConstants.TOGGLE_CREATE_OPEN] = (state, action) => ({
 
 reduce[addressesConstants.VERIFY_ADDRESS_REQUEST] = (state) => ({
     ...state,
-    isLoading: { ...state.isLoading, [addressesConstants.VERIFY_ADDRESS_REQUEST] : true }
+    isLoading: {...state.isLoading, [addressesConstants.VERIFY_ADDRESS_REQUEST]: true}
 });
 
 reduce[addressesConstants.VERIFY_ADDRESS_SUCCESS] = (state) => ({
     ...state,
-    isLoading: { ...state.isLoading, [addressesConstants.VERIFY_ADDRESS_REQUEST] : false }
+    isLoading: {...state.isLoading, [addressesConstants.VERIFY_ADDRESS_REQUEST]: false}
 });
 
 reduce[addressesConstants.VERIFY_ADDRESS_FAIL] = (state) => ({
     ...state,
-    isLoading: { ...state.isLoading, [addressesConstants.VERIFY_ADDRESS_REQUEST] : false }
+    isLoading: {...state.isLoading, [addressesConstants.VERIFY_ADDRESS_REQUEST]: false}
 });
 
 export default (state = initialState(), action) => reduce[action.type] ? reduce[action.type](state, action) : state;

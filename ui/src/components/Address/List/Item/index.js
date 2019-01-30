@@ -2,7 +2,7 @@
  * Created by vladtomsa on 09/01/2019
  */
 import React from 'react';
-import { Link } from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import compose from 'lodash/fp/compose';
 import BlackFlag from 'mdi-material-ui/Flag';
 import GreyFlag from 'mdi-material-ui/FlagOutline';
@@ -19,8 +19,8 @@ import {CREDIBILITY_TYPES, FLAG_TYPES} from 'constants/address';
 import styles from './styles';
 
 const credibilityIcon = {
-  [CREDIBILITY_TYPES.VERIFIED]: Verified,
-  [CREDIBILITY_TYPES.NOT_VERIFIED]: NotVerified,
+    [CREDIBILITY_TYPES.VERIFIED]: Verified,
+    [CREDIBILITY_TYPES.NOT_VERIFIED]: NotVerified,
 };
 
 const flagIcon = {
@@ -44,7 +44,6 @@ const AddressListItem = ({address, classes, divider, index, width}) => {
     const CredibilityIcon = credibilityIcon[address.credibility];
 
     const FlagIcon = flagIcon[address.flag];
-
     return (
         <ListItem
             button
@@ -73,15 +72,14 @@ const AddressListItem = ({address, classes, divider, index, width}) => {
                                 &nbsp;
                             </Hidden>
 
-                            <Tooltip title={address.credibility}>
-                                {
-                                    CredibilityIcon &&
-                                    (   <CredibilityIcon
-                                            className={classes[address.credibility.replace(/ /g,'')]}
-                                        />
-                                    )
-                                }
-                            </Tooltip>
+                            {
+                                CredibilityIcon &&
+                                (<Tooltip title={address.credibility}>
+                                    <CredibilityIcon
+                                        className={classes[address.credibility.replace(/ /g, '')]}
+                                    />
+                                </Tooltip>)
+                            }
                         </Typography>
                     </SmallListItemSection>
                 </Grid>
@@ -95,15 +93,15 @@ const AddressListItem = ({address, classes, divider, index, width}) => {
                                     &nbsp;
                                 </Hidden>
 
-                                <Tooltip title={address.flag}>
-                                    {
-                                        FlagIcon &&
-                                        (   <FlagIcon
-                                                className={classes[address.flag]}
-                                            />
-                                        )
-                                    }
-                                </Tooltip>
+                                {
+                                    FlagIcon &&
+                                    (<Tooltip title={address.flag}>
+                                        <FlagIcon
+                                            className={classes[address.flag]}
+                                        />
+
+                                    </Tooltip>)
+                                }
                             </Typography>
                         </SmallListItemSection>
                     </SmallListItemSection>
