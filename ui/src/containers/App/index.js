@@ -1,6 +1,6 @@
 import React, {Component, Fragment} from 'react'
-import Address from 'containers/Address/List';
-import Details from 'containers/Address/Details';
+// import Address from 'containers/Address/List';
+// import Details from 'containers/Address/Details';
 
 import { Route } from 'react-router';
 import ConnectedSwitch from 'components/ConnectedSwitch';
