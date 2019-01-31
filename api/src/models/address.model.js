@@ -3,6 +3,7 @@ import {Schema, model} from 'mongoose';
 import Source from './source.model';
 import ApiError from "../misc/ApiError";
 import escapeRegex from '../misc/escapeRegex';
+import unionWith from 'lodash/unionWith';
 // import Context from './context.model';
 // import logger from '../config/logger';
 
@@ -46,6 +47,11 @@ const addressSchema = Schema({
         }],
     },
 
+    amount: {
+        type: Number,
+        default: 0.0
+    },
+
     sources: [{
         type: Schema.Types.ObjectId,
         ref: Source,
@@ -59,7 +65,7 @@ addressSchema.statics = {
         try {
             const existingAddress = await this.findOne({address: address.address}).exec();
             if (existingAddress) {
-                if (address.sources.length > 0) {
+                if (address.sources && address.sources.length > 0) {
                     // Search for the current source if it's already assign to current the address
                     const sourceIndex = existingAddress.sources.indexOf(address.sources[0]._id);
                     if (sourceIndex === -1) {
@@ -70,13 +76,22 @@ addressSchema.statics = {
                         }
                         existingAddress.sources.push(...address.sources);
                     }
-                    // NOTE: delete address.updatedAt is not working, in order to fix this I had to set it equal to undefined
-                    existingAddress.updatedAt = undefined;
-                    return this.findOneAndUpdate({_id: existingAddress._id}, existingAddress).exec()
                 }
+                if (address.tags && address.tags.length > 0) {
+                    const cmp = (v1, v2) => v1.toLowerCase() === v2.toLowerCase();
+                    existingAddress.tags = unionWith(existingAddress.tags, address.tags, cmp);
+                }
+                if (address.type) {
+                    existingAddress.type = address.type;
+                }
+                // NOTE: delete address.updatedAt is not working, in order to fix this I had to set it equal to undefined
+                existingAddress.updatedAt = undefined;
+                return this.findOneAndUpdate({_id: existingAddress._id}, existingAddress).exec()
             } else {
-                if (address.sources.length > 0) {
+                if (address.sources && address.sources.length > 0) {
                     address.flag = 'grey';
+                } else {
+                    address.sources = [];
                 }
                 return new this(address).save();
             }

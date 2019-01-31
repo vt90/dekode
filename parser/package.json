@@ -1,0 +1,10 @@
+{
+  "name": "dekodeapi",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "ISC",
+  "scripts": {
+    "start": "nodemon --exec babel-node src/index.js --ignore tmp/* --ignore README",
+    "build": "rimraf dist/ && babel src --out-dir dist/ --ignore *.spec.js --copy-files"
+  }
+}

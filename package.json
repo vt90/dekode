@@ -67,8 +67,8 @@
     "start:ui": "cd ui && yarn start",
     "start:api": "cd api && yarn start",
     "build:api": "cd api && yarn build",
-    "start:parser": "cd btc-parser && yarn start",
-    "build:parser": "cd btc-parser && yarn build",
+    "start:parser": "cd parser && yarn start",
+    "build:parser": "cd parser && yarn build",
     "build:ui": "cd ui && yarn run build",
     "build": "rimraf ../build && cd api && yarn run build && ncp dist ../../build && rimraf dist/ && ncp public ../../build/public && cd .. && cd ui && yarn run build && ncp build ../../build/build-ui && rimraf build && cd .. && cpx package.json ../build && cd ../build && yarn install --prod"
   },

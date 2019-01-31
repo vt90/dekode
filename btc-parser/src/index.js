@@ -294,6 +294,7 @@ async function main() {
     let parser = null;
     try {
         const client = new BtcClient({
+
             username: '__cookie__',
             password: 'ff2ad0505ccebd59305c55bcfc3f8cec8fa63f563f99765ac14ad9c46f839b50',
             version: '0.17.1'
