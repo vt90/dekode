@@ -66,7 +66,7 @@ const blockSchema = Schema({
     },
 
     bits: {
-        type: Number,
+        type: String,
     },
 
     difficulty: {
@@ -100,10 +100,11 @@ blockSchema.statics = {
     async create(block) {
         try {
             if (block.time) {
-                block.date = new Date(block.time);
+                //https://stackoverflow.com/questions/42905877/java-simpledateformat-wrongly-parse-given-timestamp
+                block.date = new Date(block.time * 1000);
             }
             if (block.mediantime) {
-                block.medianDate = new Date(block.mediantime);
+                block.medianDate = new Date(block.mediantime * 1000);
             }
             return new this(block).save();
         } catch (error) {

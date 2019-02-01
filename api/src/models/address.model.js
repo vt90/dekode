@@ -63,6 +63,7 @@ addressSchema.statics = {
 
     async createOrUpdate(address) {
         try {
+            if (!address) return;
             const existingAddress = await this.findOne({address: address.address}).exec();
             if (existingAddress) {
                 if (address.sources && address.sources.length > 0) {

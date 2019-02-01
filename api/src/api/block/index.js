@@ -8,6 +8,6 @@ router
     .get(BlockBuisiness.findBlock);
 
 router
-    .route('/api/hash')
+    .route('/api/blocks')
     .post(BlockBuisiness.create);
 export default router;
