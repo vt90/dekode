@@ -6,6 +6,7 @@ import Global from '../../models/global.model';
 import compact from 'lodash/compact';
 import get from 'lodash/get';
 import Address from "../../models/address.model";
+import logger from "../../config/logger";
 
 export const create = async (req, res, next) => {
     try {
@@ -27,7 +28,6 @@ export const create = async (req, res, next) => {
             nextblockhash,
             tx,
         } = req.body;
-        throw  new Error('test');
         const block = {
             hash,
             merkleroot,
@@ -48,8 +48,12 @@ export const create = async (req, res, next) => {
         };
         // tx.forEach(console.log);
         for (let i = 0; i < tx.length; ++i) {
-            const transaction = await Transaction.create(tx[i]);
-            block.tx.push(get(transaction, '_id', null));
+            try {
+                const transaction = await Transaction.create(tx[i]);
+                block.tx.push(get(transaction, '_id', null));
+            } catch (e) {
+                logger.error(JSON.stringify(tx[i], null, 2));
+            }
         }
         block.tx = compact(block.tx);
         await Block.create(block);
