@@ -23,7 +23,7 @@ http.interceptors.response.use(
 async function main() {
     try {
         const client = new BtcClient({
-            host: "54.37.188.120",
+            // host: "54.37.188.120",
             username: '__cookie__',
             password: 'e52cfa6329dd5d8b60796129c4046e7bc05ad9d46d84f2098a5c49aa597d8412',
             version: '0.17.1'
