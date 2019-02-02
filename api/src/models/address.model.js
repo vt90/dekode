@@ -1,5 +1,6 @@
 import httpStatus from 'http-status';
 import {Schema, model} from 'mongoose';
+import mongoosePaginate from 'mongoose-paginate-v2';
 import Source from './source.model';
 import ApiError from "../misc/ApiError";
 import escapeRegex from '../misc/escapeRegex';
@@ -126,14 +127,19 @@ addressSchema.statics = {
     async list({pageNumber, pageSize, options = {}}) {
         try {
             const select = ['-sources', '-__v', '-_id'];
-            const addresses = await this.find(options)
-                .skip((pageNumber - 1) * pageSize)
-                .limit(pageSize)
-                .sort({createdAt: -1})
-                .select(select)
-                .exec();
-            const totalEntities = await this.estimatedDocumentCount(options).exec();
-            return {addresses, totalEntities};
+            const customLabels = {
+                docs: 'addresses',
+                page: 'currentPage',
+                limit: 'pageSize',
+                totalDocs: 'totalEntities',
+            };
+
+            return await AddressModel.paginate(options, {
+                page: pageNumber,
+                limit: pageSize,
+                select,
+                customLabels
+            });
         } catch (error) {
             throw error;
         }
@@ -218,4 +224,9 @@ addressSchema.statics = {
 
 };
 
-export default model('Address', addressSchema);
+addressSchema.plugin(mongoosePaginate);
+
+const AddressModel = model('Address', addressSchema);
+
+// export default model('Address', addressSchema);
+export default AddressModel;

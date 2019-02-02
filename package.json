@@ -15,6 +15,7 @@
     "@material-ui/core": "3.9.1",
     "@material-ui/icons": "3.0.2",
     "@reach/router": "1.2.1",
+    "apidoc-swagger": "0.3.0",
     "axios": "0.18.0",
     "bitcoin-core": "2.0.0",
     "body-parser": "1.18.3",
@@ -40,6 +41,7 @@
     "mdi-material-ui": "5.8.0",
     "method-override": "3.0.0",
     "mongoose": "5.4.7",
+    "mongoose-paginate-v2": "1.0.20",
     "morgan": "1.9.1",
     "prop-types": "15.6.2",
     "react": "16.7.0-alpha.2",
@@ -58,10 +60,9 @@
     "redux": "4.0.1",
     "redux-form": "8.1.0",
     "redux-thunk": "2.3.0",
-    "wallet-address-validator": "0.2.4",
-    "winston": "3.2.1",
     "swagger-ui-express": "4.0.2",
-    "apidoc-swagger": "0.3.0"
+    "wallet-address-validator": "0.2.4",
+    "winston": "3.2.1"
   },
   "scripts": {
     "start:ui": "cd ui && yarn start",
