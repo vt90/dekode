@@ -27,18 +27,21 @@ const addressSchema = Schema({
         enum: typeEnum,
         default: '-',
         required: 'false',
+        index: true,
     },
 
     flag: {
         type: String,
         enum: flagEnum,
-        default: 'white'
+        default: 'white',
+        index: true,
     },
 
     credibility: {
         type: String,
         enum: credibilityEnum,
-        default: 'not verified'
+        default: 'not verified',
+        index: true,
     },
 
     tags: {
@@ -129,7 +132,7 @@ addressSchema.statics = {
                 .sort({createdAt: -1})
                 .select(select)
                 .exec();
-            const totalEntities = await this.countDocuments(options).exec();
+            const totalEntities = await this.estimatedDocumentCount(options).exec();
             return {addresses, totalEntities};
         } catch (error) {
             throw error;

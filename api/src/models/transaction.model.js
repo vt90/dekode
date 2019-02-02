@@ -76,6 +76,7 @@ const transactionSchema = Schema({
 
         address: {
             type: String,
+            index: true,
         },
 
         txid: {
@@ -117,6 +118,7 @@ const transactionSchema = Schema({
 
         address: {
             type: String,
+            index: true,
         },
 
         value: {
