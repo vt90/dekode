@@ -25,7 +25,7 @@ export const addressesConstants = {
 
 export const ADDRESS_TYPES = {
     UNKNOWN: '-',
-    EXCHANGE: 'Exchange',
+    EXCHANGE: 'Exchanges',
     POOLS: 'Pools',
     SERVICES: 'Services/others',
     GAMBLING: 'Gambling',

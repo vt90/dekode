@@ -226,7 +226,7 @@ addressSchema.statics = {
 
 addressSchema.plugin(mongoosePaginate);
 
-const AddressModel = model('Address', addressSchema);
+const AddressModel = model('Address', addressSchema); // Used for paginate plugin
 
 // export default model('Address', addressSchema);
 export default AddressModel;

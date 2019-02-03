@@ -1,4 +1,5 @@
 import {Schema, model} from 'mongoose';
+import mongoosePaginate from 'mongoose-paginate-v2';
 import Address from './address.model';
 import get from 'lodash/get';
 import logger from '../config/logger';
@@ -203,8 +204,34 @@ transactionSchema.statics = {
         } catch (error) {
             throw error;
         }
+    },
+
+    listAddressTransactions({address, pageNumber, pageSize}) {
+        const customLabels = {
+            docs: 'transactions',
+            page: 'currentPage',
+            limit: 'pageSize',
+            totalDocs: 'totalEntities',
+        };
+        const select = ['-__v', '-_id'];
+
+        // const options = {address};
+        const options = {"$or": [{"vout.address": {"$in": [address]}}, {"vin.address": {"$in": [address]}}]};
+
+        return TransactionModel.paginate(options, {
+            page: pageNumber,
+            limit: pageSize,
+            select,
+            customLabels
+        });
+
     }
 };
 
-export default model('Transaction', transactionSchema);
+transactionSchema.plugin(mongoosePaginate);
 
+const TransactionModel = model('Transaction', transactionSchema); // Used for paginate plugin
+
+export default TransactionModel;
+
+// export default model('Transaction', transactionSchema);

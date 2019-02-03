@@ -19,6 +19,7 @@ import Typography from '@material-ui/core/Typography';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Back from 'mdi-material-ui/ChevronLeft';
+import Timeline from 'components/Timeline';
 import styles from './styles';
 
 const TABS = {
@@ -104,8 +105,18 @@ class AddressDetails extends Component {
                                         }
                                     </Tabs>
                                 </AppBar>
+                                {
+                                    currentTab === 0 && <Timeline cards={selectedAddress.sources.map(source => ({
+                                        name: source.link,
+                                        content: source.text,
+                                        percentage: 100,
+                                    }))}/>
+                                }
+                                {
+                                    currentTab !== 0 && <pre>{JSON.stringify(selectedAddress, null, 2)}</pre>
 
-                                <pre>{JSON.stringify(selectedAddress, null, 2)}</pre>
+
+                                }
                             </Paper>
                         </Grid>
                     </Grid>
