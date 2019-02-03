@@ -24,3 +24,20 @@ export const list = async (req, res, next) => {
         next(error);
     }
 };
+
+export const listAddressTransactions = async (req, res, next) => {
+    try {
+        const {address} = req.params;
+        const pageNumber = +req.query.pageNumber || 1;
+        const pageSize = +req.query.pageSize || 25;
+        const {transactions,totalEntities} = await Transaction.listAddressTransactions({address, pageNumber, pageSize});
+        res.status(httpStatus.OK).json({
+            pageNumber,
+            pageSize,
+            transactions,
+            totalEntities
+        });
+    } catch (error) {
+        next(error);
+    }
+};

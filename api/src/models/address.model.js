@@ -1,8 +1,10 @@
 import httpStatus from 'http-status';
 import {Schema, model} from 'mongoose';
+import mongoosePaginate from 'mongoose-paginate-v2';
 import Source from './source.model';
 import ApiError from "../misc/ApiError";
 import escapeRegex from '../misc/escapeRegex';
+import unionWith from 'lodash/unionWith';
 // import Context from './context.model';
 // import logger from '../config/logger';
 
@@ -26,18 +28,32 @@ const addressSchema = Schema({
         enum: typeEnum,
         default: '-',
         required: 'false',
+        index: true,
     },
 
     flag: {
         type: String,
         enum: flagEnum,
-        default: 'white'
+        default: 'white',
+        index: true,
     },
 
     credibility: {
         type: String,
         enum: credibilityEnum,
-        default: 'not verified'
+        default: 'not verified',
+        index: true,
+    },
+
+    tags: {
+        type: [{
+            type: String,
+        }],
+    },
+
+    amount: {
+        type: Number,
+        default: 0.0
     },
 
     sources: [{
@@ -51,9 +67,10 @@ addressSchema.statics = {
 
     async createOrUpdate(address) {
         try {
+            if (!address) return;
             const existingAddress = await this.findOne({address: address.address}).exec();
             if (existingAddress) {
-                if (address.sources.length > 0) {
+                if (address.sources && address.sources.length > 0) {
                     // Search for the current source if it's already assign to current the address
                     const sourceIndex = existingAddress.sources.indexOf(address.sources[0]._id);
                     if (sourceIndex === -1) {
@@ -64,13 +81,22 @@ addressSchema.statics = {
                         }
                         existingAddress.sources.push(...address.sources);
                     }
-                    // NOTE: delete address.updatedAt is not working, in order to fix this I had to set it equal to undefined
-                    existingAddress.updatedAt = undefined;
-                    return this.findOneAndUpdate({_id: existingAddress._id}, existingAddress).exec()
                 }
+                if (address.tags && address.tags.length > 0) {
+                    const cmp = (v1, v2) => v1.toLowerCase() === v2.toLowerCase();
+                    existingAddress.tags = unionWith(existingAddress.tags, address.tags, cmp);
+                }
+                if (address.type) {
+                    existingAddress.type = address.type;
+                }
+                // NOTE: delete address.updatedAt is not working, in order to fix this I had to set it equal to undefined
+                existingAddress.updatedAt = undefined;
+                return this.findOneAndUpdate({_id: existingAddress._id}, existingAddress).exec()
             } else {
-                if (address.sources.length > 0) {
+                if (address.sources && address.sources.length > 0) {
                     address.flag = 'grey';
+                } else {
+                    address.sources = [];
                 }
                 return new this(address).save();
             }
@@ -101,14 +127,19 @@ addressSchema.statics = {
     async list({pageNumber, pageSize, options = {}}) {
         try {
             const select = ['-sources', '-__v', '-_id'];
-            const addresses = await this.find(options)
-                .skip((pageNumber - 1) * pageSize)
-                .limit(pageSize)
-                .sort({createdAt: -1})
-                .select(select)
-                .exec();
-            const totalEntities = await this.countDocuments(options).exec();
-            return {addresses, totalEntities};
+            const customLabels = {
+                docs: 'addresses',
+                page: 'currentPage',
+                limit: 'pageSize',
+                totalDocs: 'totalEntities',
+            };
+
+            return await AddressModel.paginate(options, {
+                page: pageNumber,
+                limit: pageSize,
+                select,
+                customLabels
+            });
         } catch (error) {
             throw error;
         }
@@ -193,4 +224,9 @@ addressSchema.statics = {
 
 };
 
-export default model('Address', addressSchema);
+addressSchema.plugin(mongoosePaginate);
+
+const AddressModel = model('Address', addressSchema); // Used for paginate plugin
+
+// export default model('Address', addressSchema);
+export default AddressModel;

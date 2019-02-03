@@ -2,6 +2,7 @@ import httpStatus from 'http-status';
 import logger from '../../config/logger';
 import Source from '../../models/source.model';
 import Address from '../../models/address.model';
+import Global from '../../models/global.model';
 import APIError from "../../misc/ApiError";
 import isValidBtcAddress from '../../misc/ValidateAddress';
 import {compose, ifElse, not, map, filter} from 'conductor';
@@ -118,17 +119,19 @@ export const update = async (req, res, next) => {
 export const findAddressesSummary = async (req, res, next) => {
     try {
         // const x = await Address.summary();
-        const nrOfAddresses = await Address.countDocuments().exec();
-        const nrOfBlackListedAddresses = await Address.countDocuments({flag: 'black'}).exec();
-        const nrOfGrayListedAddresses = await Address.countDocuments({flag: 'grey'}).exec();
-        const nrOfVerifiedAddresses = await Address.countDocuments({credibility: 'verified'}).exec();
-        const nrOfSources = await Source.countDocuments().exec();
+        const nrOfAddresses = await Address.estimatedDocumentCount().exec();
+        const nrOfBlackListedAddresses = await Address.count({flag: 'black'}).exec();
+        const nrOfGrayListedAddresses = await Address.count({flag: 'grey'}).exec();
+        const nrOfVerifiedAddresses = await Address.count({credibility: 'verified'}).exec();
+        const nrOfSources = await Source.estimatedDocumentCount().exec();
+        const lastInsertedBlock = await Global.findOne().select(["-_id", "-__v"]).exec();
         const result = {
             nrOfAddresses,
             nrOfBlackListedAddresses,
             nrOfGrayListedAddresses,
             nrOfVerifiedAddresses,
             nrOfSources,
+            lastInsertedBlock: lastInsertedBlock ? lastInsertedBlock.lastInsertedBlock : 0,
         };
 
         res.status(httpStatus.OK).json(result);

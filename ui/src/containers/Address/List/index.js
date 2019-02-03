@@ -56,7 +56,7 @@ class Address extends Component {
 
         this.props.createAddresses(data);
 
-        this.getAddressesSummary();
+        this.props.getAddressesSummary();
     };
 
     render() {

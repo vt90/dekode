@@ -2,7 +2,8 @@
  * Created by vladtomsa on 10/01/2019
  */
 import React, {PureComponent} from 'react';
-import { RadialBarChart, RadialBar, ResponsiveContainer, LabelList, Legend, Tooltip} from 'recharts';
+// import { RadialBarChart, RadialBar, ResponsiveContainer, LabelList, Legend, Tooltip} from 'recharts';
+import { RadialBarChart, RadialBar, ResponsiveContainer,  Legend} from 'recharts';
 import {
     amber,
     green,

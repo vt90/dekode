@@ -82,7 +82,7 @@ router
      *  @apiGroup Addresses
      *
      */
-    .post(validate(filterAddresses),AddressBusinessService.filterAddresses);
+    .post(validate(filterAddresses), AddressBusinessService.filterAddresses);
 
 router
     .route('/summary')

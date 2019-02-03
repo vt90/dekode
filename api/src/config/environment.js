@@ -1,9 +1,17 @@
-const path = require('path');
+import path from 'path';
 import dotenv from 'dotenv-safe';
 
+let dotEnvPath = path.join(__dirname, '../../.env');
+let sample = path.join(__dirname, '../../.env.example');
+
+if (process.env.NODE_ENV === 'production') {
+    dotEnvPath = path.join(__dirname, '../.env');
+    sample = path.join(__dirname, '../.env.example');
+}
+
 dotenv.load({
-    path: path.join(__dirname, '../../.env'),
-    sample: path.join(__dirname, '../../.env.example')
+    path: dotEnvPath,
+    sample: sample
 });
 
 export default {

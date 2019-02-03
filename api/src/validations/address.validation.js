@@ -13,7 +13,6 @@ export const createAddress = {
         addresses: Joi.array().items(Joi.string()).required(),
         link: Joi.string().uri(),
         text: Joi.string(),
-        sourceName: Joi.string(),
     }
 };
 

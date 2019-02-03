@@ -9,9 +9,13 @@ import * as error from '../middlewares/error';
 import environment from './environment';
 import routes from '../api/routes';
 import swaggerUi from 'swagger-ui-express';
-import swagger from '../../public/swagger';
+import swagger from '../public/swagger';
+import path from 'path';
 
 const app = express();
+
+// app.use(express.static(path.join('../', 'build-ui')));
+app.use(express.static(path.join(__dirname, '../', 'build-ui')));
 
 app.use(morgan(environment.logs));
 

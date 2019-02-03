@@ -27,3 +27,5 @@
     ```` 
     node_modules\.bin\extract-mongo-schema -d "mongodb://admin:test@localhost:27017/dekode?authSource=admin" -o schema.html -f html-diagram
     ````
+
+* ./bitcoin-cli decodescript

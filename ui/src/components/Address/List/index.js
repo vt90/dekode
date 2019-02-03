@@ -111,7 +111,7 @@ const AddressesList = ({
                                                         </li>
 
                                                         <li>
-                                                            <strong>White</strong> - at least 2 sources where found for
+                                                            <strong>Black</strong> - at least 2 sources where found for
                                                             the
                                                             address
                                                         </li>
