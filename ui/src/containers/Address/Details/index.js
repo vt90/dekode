@@ -1,7 +1,7 @@
 /**
  * Created by vladtomsa on 10/01/2019
  */
-import React, {Component, Fragment} from 'react';
+import React, {Component} from 'react';
 import {Link} from 'react-router-dom'
 import {connect} from 'react-redux';
 import compose from 'lodash/fp/compose';
@@ -9,7 +9,6 @@ import {getAddress} from 'actions/address';
 import Loading from 'components/Loading';
 import {addressesConstants, ADDRESS_TYPES} from 'constants/address';
 import {withStyles} from '@material-ui/core/styles';
-
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import CardContent from '@material-ui/core/CardContent';
@@ -19,7 +18,7 @@ import Typography from '@material-ui/core/Typography';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Back from 'mdi-material-ui/ChevronLeft';
-import Timeline from 'components/Timeline';
+import SourcesTimeline from './SourcesTimeline';
 import styles from './styles';
 
 const TABS = {
@@ -51,6 +50,18 @@ class AddressDetails extends Component {
         this.setState({currentTab: index});
     };
 
+    getCurrentTabContent = () => {
+        const {selectedAddress} = this.props;
+        const {currentTab} = this.state;
+
+        switch (currentTab) {
+            case TABS.SOURCES.value:
+                return <SourcesTimeline sources={selectedAddress.sources} />;
+            default:
+                return <pre>{JSON.stringify(selectedAddress, null, 2)}</pre>;
+        }
+    };
+
     render() {
         const {classes, isLoading, selectedAddress} = this.props;
         const {currentTab} = this.state;
@@ -62,7 +73,7 @@ class AddressDetails extends Component {
         if (!selectedAddress) return <Loading/>;
 
         return (
-            <Fragment>
+            <div>
                 <Paper square elevation={8} className={classes[selectedAddress.flag]}>
                     <CardContent className={classes.header}>
                         <Button
@@ -87,11 +98,15 @@ class AddressDetails extends Component {
                     <Grid container spacing={16} justify="center">
                         <Grid item xs={11}>
                             <Paper elevation={8}>
-                                <AppBar position="static" color="default">
+                                <AppBar
+                                    className={classes.tabHeader}
+                                    color="default"
+                                    position="static"
+                                >
                                     <Tabs
                                         value={currentTab}
                                         onChange={(_, value) => this.onTabChange(value)}
-                                        indicatorColor="primary"
+                                        indicatorColor="secondary"
                                         textColor="primary"
                                         variant="scrollable"
                                         scrollButtons="auto"
@@ -105,23 +120,13 @@ class AddressDetails extends Component {
                                         }
                                     </Tabs>
                                 </AppBar>
-                                {
-                                    currentTab === 0 && <Timeline cards={selectedAddress.sources.map(source => ({
-                                        name: source.link,
-                                        content: source.text,
-                                        percentage: 100,
-                                    }))}/>
-                                }
-                                {
-                                    currentTab !== 0 && <pre>{JSON.stringify(selectedAddress, null, 2)}</pre>
 
-
-                                }
+                                {this.getCurrentTabContent()}
                             </Paper>
                         </Grid>
                     </Grid>
                 </div>
-            </Fragment>
+            </div>
         );
     }
 

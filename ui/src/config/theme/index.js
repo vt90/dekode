@@ -1,8 +1,5 @@
 import {createMuiTheme} from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
-import red from '@material-ui/core/colors/red';
-
-const error = red;
 
 const themeOverrides = {
     MuiButton: {
@@ -23,6 +20,14 @@ const themeOverrides = {
           minWidth: 400,
           maxWidth: '96vh',
       }
+    },
+    MuiTab: {
+      label: {
+          textTransform: 'none',
+      },
+        // selected: {
+        //   fontWeight: '600'
+        // },
     },
     MuiTooltip: {
         tooltip: {
@@ -49,7 +54,8 @@ export default createMuiTheme({
             dark: '#01A9EE',
         },
         error: {
-            main: error[500],
+            main: '#ffa726',
+            dark: '#fb8c00',
         },
         background: {default: '#F7F7F7'},
     },

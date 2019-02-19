@@ -31,6 +31,10 @@ export default (theme) => {
         },
         tabsContainer: {
             marginTop: -60,
+            padding: 16,
+        },
+        tabHeader: {
+          marginBottom: 3,
         },
     }
 }

@@ -1,23 +1,20 @@
-import React, {Fragment} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import Bounce from 'react-reveal/Bounce';
-import Calendar from 'mdi-material-ui/CalendarCheck';
 import {withStyles} from '@material-ui/core/styles';
-import Percentage from './Percentage';
 
 /* eslint-disable */
 import styles from './styles';
 
 const Timeline = ({cards, classes}) => {
     return (
-        <Fragment>
+        <div>
             <Grid container spacing={8} className={classes.timelineContainer}>
                 {
                     cards.map((card, index) => {
                         return (
-                            <Grid item xs={12} className="timeline-item-container" key={card.name}>
+                            <Grid item xs={12} className="timeline-item-container" key={index}>
                                 <Grid container>
                                     {
                                         index % 2 !== 0
@@ -31,53 +28,31 @@ const Timeline = ({cards, classes}) => {
                                         xs={12}
                                         md={6}
                                     >
-                                        <Bounce>
+                                        <div>
                                             <Paper elevation={12} className={`paper ${classes.timelinePaper}`}>
-                                                <div className="flex justify-center">
-                                                    <Percentage value={card.percentage}/>
-                                                </div>
-
-                                                <h4>
-                                                    {card.name}
-                                                </h4>
-
-                                                {card.content}
-
                                                 {
-                                                    card.timeline
-                                                        ? (
-                                                            <div>
-                                                                <br/>
-                                                                {
-                                                                    card.timeline.map(timeline => (
-                                                                        <div key={card.name + timeline.time}>
-                                                                            <h5 className="flex align-center">
-                                                                                <Calendar/> {timeline.time}
-                                                                            </h5>
-
-                                                                            <ul>
-                                                                                {
-                                                                                    timeline.activities.map(activity => (
-                                                                                        <li key={activity}>
-                                                                                            <p>{activity};</p>
-                                                                                        </li>
-                                                                                    ))
-                                                                                }
-                                                                            </ul>
-                                                                        </div>
-                                                                    ))
-                                                                }
-                                                            </div>
-                                                        )
+                                                    card.header
+                                                        ? card.header
                                                         : null
                                                 }
 
+                                                {
+                                                    card.content
+                                                        ? card.content
+                                                        : null
+                                                }
+
+                                                {
+                                                    card.footer
+                                                        ? card.footer
+                                                        : null
+                                                }
                                             </Paper>
 
                                             <div className="timelineIcon">
                                                 {card.icon}
                                             </div>
-                                        </Bounce>
+                                        </div>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -87,12 +62,19 @@ const Timeline = ({cards, classes}) => {
 
                 <div className={classes.divider}/>
             </Grid>
-        </Fragment>
+        </div>
     )
 };
 
 Timeline.propTypes = {
-    cards: PropTypes.array.isRequired,
+    cards: PropTypes.arrayOf(
+        PropTypes.shape({
+            content: PropTypes.any.isRequired,
+            footer: PropTypes.any,
+            header: PropTypes.any,
+            icon: PropTypes.any,
+        })
+    ).isRequired,
     classes: PropTypes.object.isRequired,
 };
 

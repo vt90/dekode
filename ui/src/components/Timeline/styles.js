@@ -1,30 +1,12 @@
 const styles = (theme) => {
     const ICON_SIZE = 48;
-    const ARROW_COLOR = theme.palette.primary.main;
+    const ARROW_COLOR = '#bdbaba';
     const ARROW_SIZE = 10;
 
     return {
         timelineContainer: {
+            padding: 12,
             position: 'relative',
-            '& h4, h5': {
-                color: '#FFFFFF',
-                fontSize: 24,
-                marginBottom: 10,
-            },
-            '& h5': {
-                fontSize: 17,
-                '& svg': {
-                    marginRight: 6,
-                },
-            },
-            '& p, p a, ul, li': {
-                color: '#E8E9FF',
-                fontSize: 15,
-                lineHeight: '24px',
-            },
-            '& ul': {
-                paddingLeft: 20,
-            },
             '& .timeline-card': {
                 position: 'relative',
                 marginBottom: ICON_SIZE / 2,
@@ -37,6 +19,7 @@ const styles = (theme) => {
                 backgroundColor: theme.palette.secondary.main,
                 border: '2px solid #FFFFFF',
                 borderRadius: '50%',
+                boxShadow: '0 4px 20px 0 rgba(0,0,0,.14), 0 7px 10px -5px rgba(0,188,212,.4)',
                 display: 'flex',
                 height: ICON_SIZE,
                 justifyContent: 'center',
@@ -55,7 +38,6 @@ const styles = (theme) => {
                 top: 60,
             },
             [theme.breakpoints.up('md')]: {
-                padding: 20,
                 '& .timeline-card:nth-child(odd)': {
                     marginTop: 0,
                     paddingRight: ICON_SIZE,
@@ -80,7 +62,7 @@ const styles = (theme) => {
             },
             '& .timeline-item-container': {
                 [theme.breakpoints.up('md')]: {
-                    marginTop: -240,
+                    marginTop: -70,
                 },
             },
             '& .timeline-item-container:nth-child(1)': {
@@ -88,10 +70,15 @@ const styles = (theme) => {
                     marginTop: 0,
                 },
             },
+            '& .timeline-item-container:nth-child(2)': {
+                [theme.breakpoints.up('md')]: {
+                    marginTop: -110,
+                },
+            },
         },
         timelinePaper: {
-            borderRadius: 40,
-            padding: 40,
+            borderRadius: 16,
+            padding: 16,
             '&:before': {
                 content: '""',
                 position: 'absolute',
@@ -106,36 +93,12 @@ const styles = (theme) => {
         divider: {
             position: 'absolute',
             top: 0,
-            width: 1,
+            width: 2,
             height: '100%',
-            background: '#FFFFFF',
+            background: '#e5e5e5',
+            left: 17,
             [theme.breakpoints.up('md')]: {
                 left: '50%',
-            },
-        },
-        circle: {
-            background: `${theme.palette.primary.light}`,
-            borderRadius: '50%',
-            '& :before': {
-                borderRadius: '50%',
-            },
-        },
-        percentage: {
-            position: 'relative',
-            '& .value': {
-                position: 'absolute',
-                top: 12,
-                left: 12,
-                width: 116,
-                height: 116,
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                background: 'rgba(139, 141, 197, 0.3)',
-                borderRadius: '50%',
-                color: 'rgba(255, 255, 255, 0.59)',
-                fontSize: 28,
-                fontWeight: 700,
             },
         },
     };

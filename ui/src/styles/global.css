@@ -22,6 +22,14 @@ body {
     align-items: flex-end;
 }
 
+.break-all {
+    word-break: break-all;
+}
+
+.break-word {
+    word-break: break-word;
+}
+
 .fab {
     position: fixed !important;
     bottom: 24px;
