@@ -5,6 +5,7 @@ import Source from './source.model';
 import ApiError from "../misc/ApiError";
 import escapeRegex from '../misc/escapeRegex';
 import unionWith from 'lodash/unionWith';
+import isEmpty from 'lodash/isEmpty';
 // import Context from './context.model';
 // import logger from '../config/logger';
 
@@ -133,7 +134,9 @@ addressSchema.statics = {
                 limit: 'pageSize',
                 totalDocs: 'totalEntities',
             };
-
+            if (isEmpty(options)) {
+                return {addresses: [], totalEntities: 0};
+            }
             return await AddressModel.paginate(options, {
                 page: pageNumber,
                 limit: pageSize,
