@@ -6,8 +6,10 @@ import {Link} from 'react-router-dom'
 import {connect} from 'react-redux';
 import compose from 'lodash/fp/compose';
 import {getAddress} from 'actions/address';
+import {getTransactionsByAddress} from 'actions/transaction';
 import Loading from 'components/Loading';
 import {addressesConstants, ADDRESS_TYPES} from 'constants/address';
+import {transactionConstants} from 'constants/transaction';
 import {withStyles} from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
@@ -47,6 +49,10 @@ class AddressDetails extends Component {
     };
 
     onTabChange = (index) => {
+        const {selectedAddress: {address}, getTransactionsByAddress} = this.props;
+        if (index === TABS.TRANSACTIONS.value) {
+            getTransactionsByAddress(address);
+        }
         this.setState({currentTab: index});
     };
 
@@ -56,7 +62,8 @@ class AddressDetails extends Component {
 
         switch (currentTab) {
             case TABS.SOURCES.value:
-                return <SourcesTimeline sources={selectedAddress.sources} />;
+                return <SourcesTimeline sources={selectedAddress.sources}/>;
+            // case TABS.TRANSACTIONS.value:
             default:
                 return <pre>{JSON.stringify(selectedAddress, null, 2)}</pre>;
         }
@@ -68,6 +75,10 @@ class AddressDetails extends Component {
 
         if (isLoading && isLoading[addressesConstants.GET_ADDRESS_BY_ADDRESS_REQUEST]) {
             return <Loading message="Fetching address details"/>
+        }
+
+        if (isLoading && isLoading[transactionConstants.GET_ADDRESS_TRANSACTIONS_REQUEST]) {
+            return <Loading message="Fetching transactions"/>
         }
 
         if (!selectedAddress) return <Loading/>;
@@ -138,15 +149,16 @@ class AddressDetails extends Component {
 }
 
 const mapStateToProps = (state) => {
-    const {address} = state;
+    const {address, transaction} = state;
     return {
-        isLoading: address.isLoading,
+        isLoading: {...address.isLoading, ...transaction.isLoading},
         selectedAddress: address.selectedAddress,
     }
 };
 
 const mapDispatchToProps = {
-    getAddress
+    getAddress,
+    getTransactionsByAddress,
 };
 
 export default compose(

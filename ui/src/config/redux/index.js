@@ -1,5 +1,6 @@
 import {createStore, combineReducers, applyMiddleware, compose} from 'redux';
-import { createBrowserHistory } from 'history';
+// import { createBrowserHistory } from 'history';
+import { createHashHistory as createBrowserHistory } from 'history';
 import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';

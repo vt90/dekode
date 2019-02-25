@@ -213,9 +213,8 @@ transactionSchema.statics = {
             limit: 'pageSize',
             totalDocs: 'totalEntities',
         };
-        const select = ['-__v', '-_id'];
+        const select = "-_id txid vin.address vout.address vin.vout vout.value";
 
-        // const options = {address};
         const options = {"$or": [{"vout.address": {"$in": [address]}}, {"vin.address": {"$in": [address]}}]};
 
         return TransactionModel.paginate(options, {

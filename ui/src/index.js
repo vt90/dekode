@@ -10,7 +10,7 @@ import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import theme from 'config/theme';
 import './styles/global.css';
 
-const store = configureStore()
+const store = configureStore();
 
 const Root = (
     <Provider store={store}>
