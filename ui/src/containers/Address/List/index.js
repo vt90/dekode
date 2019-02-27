@@ -178,7 +178,7 @@ class Address extends Component {
     }
 
     componentDidMount() {
-        this.getAddresses();
+        this.props.getAddresses({pageNumber: 1, pageSize: 25, flag: 'grey'});
 
         this.props.getAddressesSummary();
     }

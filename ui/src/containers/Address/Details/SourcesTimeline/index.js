@@ -71,7 +71,8 @@ const SourcesTimeline = (props) => {
                 {/* ToDo verify title || conditions */}
                 <CardHeader
                     className={classes.footer}
-                    title={source.sourceName || 'Vlad Tomsa'}
+                    // title={source.sourceName || 'Vlad Tomsa'}
+                    title={source.sourceName}
                     subheader={moment(source.createdDate).format(DATE_TIME_FORMAT)}
                 />
             </Fragment>
