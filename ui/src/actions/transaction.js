@@ -8,8 +8,22 @@ export const getTransactionsByAddress = (address) => async dispatch => {
     try {
         dispatch(getTransactionByAddressRequest());
         const result = await getTransactionsAddress(address);
-        dispatch(getTransactionByAddressSuccess(result));
+        const transactions = result.transactions.map(({txid, vin, vout}) => {
+            let transactionAddress = vin.find(add => add.address === address);
+            let income = true;
+            if (!transactionAddress) {
+                transactionAddress = vout.find(add => add.address === address);
+                income = false;
+            }
+            return ({
+                txid,
+                income,
+                value: income ? transactionAddress.vout : transactionAddress.value,
+            })
+        });
+        dispatch(getTransactionByAddressSuccess({...result, transactions}));
     } catch (error) {
+        console.log(error);
         dispatch(getTransactionByAddressFail(error));
     }
 };

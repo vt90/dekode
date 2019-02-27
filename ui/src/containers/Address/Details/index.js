@@ -21,6 +21,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Back from 'mdi-material-ui/ChevronLeft';
 import SourcesTimeline from './SourcesTimeline';
+import TransactionsList from './TransactionsList';
 import styles from './styles';
 
 const TABS = {
@@ -57,13 +58,14 @@ class AddressDetails extends Component {
     };
 
     getCurrentTabContent = () => {
-        const {selectedAddress} = this.props;
+        const {selectedAddress, transactions} = this.props;
         const {currentTab} = this.state;
 
         switch (currentTab) {
             case TABS.SOURCES.value:
                 return <SourcesTimeline sources={selectedAddress.sources}/>;
-            // case TABS.TRANSACTIONS.value:
+            case TABS.TRANSACTIONS.value:
+                return <TransactionsList transactions={transactions}/>;
             default:
                 return <pre>{JSON.stringify(selectedAddress, null, 2)}</pre>;
         }
@@ -153,6 +155,7 @@ const mapStateToProps = (state) => {
     return {
         isLoading: {...address.isLoading, ...transaction.isLoading},
         selectedAddress: address.selectedAddress,
+        transactions: transaction.transactions,
     }
 };
 
