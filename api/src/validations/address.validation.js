@@ -31,7 +31,7 @@ export const filterAddresses = {
         flag: Joi.string().valid(AddressModel.schema.path('flag').enumValues),
         type: Joi.string().valid(AddressModel.schema.path('type').enumValues),
         credibility: Joi.string().valid(AddressModel.schema.path('credibility').enumValues),
-        pageNumber: Joi.number().min(1),
-        pageSize: Joi.number().min(1),
+        // pageNumber: Joi.number().min(1),
+        // pageSize: Joi.number().min(1),
     }
 };

@@ -125,25 +125,10 @@ addressSchema.statics = {
         }
     },
 
-    async list({pageNumber, pageSize, options = {}}) {
+    async list({pageSize, options = {}}) {
         try {
-            // const select = ['-sources', '-__v', '-_id'];
-            // const customLabels = {
-            //     docs: 'addresses',
-            //     page: 'currentPage',
-            //     limit: 'pageSize',
-            //     totalDocs: 'totalEntities',
-            // };
-            // if (isEmpty(options)) {
-            //     return {    addresses: [], totalEntities: 0};
-            // }
-            // return await AddressModel.paginate(options, {
-            //     page: pageNumber,
-            //     limit: pageSize,
-            //     select,
-            //     customLabels
-            // });
-            return await this.find().limit(25);
+            const select = ['-sources', '-__v'];
+            return await this.find(options).sort({_id: 1}).limit(pageSize + 1).select(select).exec();
         } catch (error) {
             throw error;
         }
@@ -196,7 +181,9 @@ addressSchema.statics = {
                flag,
                credibility,
                pageNumber,
-               pageSize
+               pageSize,
+               id,
+               next = true,
            }) {
         try {
             const options = {};
@@ -204,7 +191,17 @@ addressSchema.statics = {
             if (type) options.type = {'$eq': type};
             if (flag) options.flag = {'$eq': flag};
             if (credibility) options.credibility = {'$eq': credibility};
-            return this.list({pageNumber, pageSize, options});
+            if (next) {
+                options._id = {'$gt': id};
+            } else {
+                options._id = {'lt': id};
+            }
+            const addresses = this.list({pageNumber, pageSize, options});
+            let hasPrevious = true;
+            let hasNext = true;
+            if (!id) hasPrevious = false;
+            if (addresses.length === pageNumber) hasNext = false;
+            return {addresses, hasPrevious, hasNext};
         } catch (error) {
             throw error;
         }

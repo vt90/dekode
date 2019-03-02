@@ -143,17 +143,23 @@ export const findAddressesSummary = async (req, res, next) => {
 
 export const filterAddresses = async (req, res, next) => {
     try {
-        const {term, type, flag, credibility} = req.body;
-        const pageNumber = +req.body.pageNumber || 1;
-        // const pageSize = +req.body.pageSize || 25;
+        const {term, type, flag, credibility, id, next} = req.body;
         const pageSize = 25;
-        // const {addresses, totalEntities} = await Address.filter({term, type, flag, credibility, pageNumber, pageSize});
-        const addresses = await Address.filter({term, type, flag, credibility, pageNumber, pageSize});
-        res.status(httpStatus.OK).json({
+        const {addresses, hasNext, hasPrevious} = await Address.filter({
+            term,
+            type,
+            flag,
+            credibility,
             pageNumber,
-            // pageSize,
+            pageSize,
+            id,
+            next: next || true,
+        });
+        addresses.pop();
+        res.status(httpStatus.OK).json({
+            hasPrevious,
+            hasNext,
             addresses,
-            // totalEntities
         });
     } catch (error) {
         next(error);
