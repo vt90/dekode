@@ -186,7 +186,7 @@ addressSchema.statics = {
                  }) {
         try {
             const options = {};
-            if (term) options.address = new RegExp(escapeRegex(term), 'gi');
+            if (term) options.address = {'$eq': term};
             if (type) options.type = {'$eq': type};
             if (flag) options.flag = {'$eq': flag};
             if (credibility) options.credibility = {'$eq': credibility};
