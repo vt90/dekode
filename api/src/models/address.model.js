@@ -175,31 +175,34 @@ addressSchema.statics = {
         //     .exec();
     },
 
-    filter({
-               term,
-               type,
-               flag,
-               credibility,
-               pageNumber,
-               id,
-               next = true,
-           }) {
+    async filter({
+                     term,
+                     type,
+                     flag,
+                     credibility,
+                     pageSize,
+                     id,
+                     next = true,
+                 }) {
         try {
             const options = {};
             if (term) options.address = new RegExp(escapeRegex(term), 'gi');
             if (type) options.type = {'$eq': type};
             if (flag) options.flag = {'$eq': flag};
             if (credibility) options.credibility = {'$eq': credibility};
-            if (next) {
+            if (next && id) {
                 options._id = {'$gt': id};
-            } else {
-                options._id = {'lt': id};
+            } else if (!next && id) {
+                options._id = {'$lt': id};
             }
-            const addresses = this.list({pageSize, options});
+            const addresses = await this.list({pageSize, options});
             let hasPrevious = true;
             let hasNext = true;
             if (!id) hasPrevious = false;
-            if (addresses.length === pageSize) hasNext = false;
+            if (addresses.length === pageSize) {
+                if (next) hasNext = false;
+                else hasPrevious = false;
+            }
             return {addresses, hasPrevious, hasNext};
         } catch (error) {
             throw error;

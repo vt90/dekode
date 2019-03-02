@@ -152,7 +152,7 @@ export const filterAddresses = async (req, res, next) => {
             credibility,
             pageSize,
             id,
-            next: next || true,
+            next: next,
         });
         addresses.pop();
         res.status(httpStatus.OK).json({
