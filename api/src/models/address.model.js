@@ -181,7 +181,6 @@ addressSchema.statics = {
                flag,
                credibility,
                pageNumber,
-               pageSize,
                id,
                next = true,
            }) {
@@ -196,11 +195,11 @@ addressSchema.statics = {
             } else {
                 options._id = {'lt': id};
             }
-            const addresses = this.list({pageNumber, pageSize, options});
+            const addresses = this.list({pageSize, options});
             let hasPrevious = true;
             let hasNext = true;
             if (!id) hasPrevious = false;
-            if (addresses.length === pageNumber) hasNext = false;
+            if (addresses.length === pageSize) hasNext = false;
             return {addresses, hasPrevious, hasNext};
         } catch (error) {
             throw error;

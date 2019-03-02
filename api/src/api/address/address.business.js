@@ -150,7 +150,6 @@ export const filterAddresses = async (req, res, next) => {
             type,
             flag,
             credibility,
-            pageNumber,
             pageSize,
             id,
             next: next || true,
