@@ -19,14 +19,15 @@ import List from 'components/Address/List/index';
 import SummaryReport from 'components/Address/Reports/Summary/index';
 import Loading from 'components/Loading/index';
 import {addressesConstants} from 'constants/address';
+import merge from 'lodash/merge';
 import styles from './styles';
 
-const initialFilterValues = {
-    term: '',
-    type: null,
-    flag: null,
-    credibility: undefined,
-};
+// const initialFilterValues = {
+//     term: '',
+//     type: null,
+//     flag: null,
+//     credibility: undefined,
+// };
 
 const initialCreateValues = {
     addresses: [''],
@@ -34,7 +35,7 @@ const initialCreateValues = {
 };
 
 class Address extends Component {
-    getAddresses = (pNumber, pSize) => {
+    getAddresses = (pNumber = 1, pSize) => {
         const {filterFormValues, getAddresses, pageNumber, pageSize} = this.props;
 
         getAddresses({
@@ -73,6 +74,7 @@ class Address extends Component {
             nrOfGrayListedAddresses,
             nrOfVerifiedAddresses,
             nrOfSources,
+            filterFormValues,
         } = this.props;
 
         return (
@@ -133,7 +135,7 @@ class Address extends Component {
                                             elevation={8}
                                         >
                                             <List
-                                                initialFilterValues={initialFilterValues}
+                                                initialFilterValues={filterFormValues}
                                                 onFilterSubmit={() => this.getAddresses(1)}
                                                 addresses={this.props.addresses}
                                                 isVerified={this.props.isVerified}
@@ -178,9 +180,10 @@ class Address extends Component {
     }
 
     componentDidMount() {
-        this.props.getAddresses({pageNumber: 1, pageSize: 25, flag: 'grey'});
+        const {filterFormValues, getAddresses, getAddressesSummary} = this.props;
+        getAddresses({pageNumber: 1, pageSize: 25, ...filterFormValues});
 
-        this.props.getAddressesSummary();
+        getAddressesSummary();
     }
 
     componentWillMount() {
@@ -204,7 +207,9 @@ const mapStateToProps = (state) => {
         nrOfGrayListedAddresses: address.nrOfGrayListedAddresses,
         nrOfVerifiedAddresses: address.nrOfVerifiedAddresses,
         nrOfSources: address.nrOfSources,
-        filterFormValues: getFormValues('AddressesFilterForm')(state),
+        //TODO replace this with action putAddressFilterValues
+        // this modifies the state values directly
+        filterFormValues: merge(address.filterValues, getFormValues('AddressesFilterForm')(state)),
     }
 };
 

@@ -173,6 +173,7 @@ transactionSchema.statics = {
                     if (existingTransaction) {
                         const outTx = existingTransaction.vout[transaction.vin[i].vout];
                         transaction.vin[i].address = outTx.address;
+                        transaction.vin[i].vout = outTx.value;
                         await Address.findOneAndUpdate({address: outTx.address}, {$inc: {amount: -outTx.value}});
                     }
                 }

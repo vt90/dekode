@@ -127,22 +127,23 @@ addressSchema.statics = {
 
     async list({pageNumber, pageSize, options = {}}) {
         try {
-            const select = ['-sources', '-__v', '-_id'];
-            const customLabels = {
-                docs: 'addresses',
-                page: 'currentPage',
-                limit: 'pageSize',
-                totalDocs: 'totalEntities',
-            };
-            if (isEmpty(options)) {
-                return {addresses: [], totalEntities: 0};
-            }
-            return await AddressModel.paginate(options, {
-                page: pageNumber,
-                limit: pageSize,
-                select,
-                customLabels
-            });
+            // const select = ['-sources', '-__v', '-_id'];
+            // const customLabels = {
+            //     docs: 'addresses',
+            //     page: 'currentPage',
+            //     limit: 'pageSize',
+            //     totalDocs: 'totalEntities',
+            // };
+            // if (isEmpty(options)) {
+            //     return {    addresses: [], totalEntities: 0};
+            // }
+            // return await AddressModel.paginate(options, {
+            //     page: pageNumber,
+            //     limit: pageSize,
+            //     select,
+            //     customLabels
+            // });
+            return await this.find().limit(25);
         } catch (error) {
             throw error;
         }

@@ -86,3 +86,4 @@ const createAddressesFail = error => ({type: addressesConstants.CREATE_ADDRESS_F
 // const verifyAddressesFail = error => ({type: addressesConstants.VERIFY_ADDRESS_FAIL, payload: error});
 
 export const toggleCreateOpen = payload => ({type: addressesConstants.TOGGLE_CREATE_OPEN, payload});
+export const putAddressFilterValues = payload => ({type: addressesConstants.PUT_ADDRESS_FILTER_VALUES, payload});

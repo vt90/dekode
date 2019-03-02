@@ -14,6 +14,12 @@ const initialState = () => ({
     nrOfGrayListedAddresses: 0,
     nrOfVerifiedAddresses: 0,
     nrOfSources: 0,
+    filterValues: {
+        term: null,
+        type: null,
+        credibility: null,
+        flag: 'black',
+    }
 });
 
 const reduce = {};
@@ -90,6 +96,11 @@ reduce[addressesConstants.VERIFY_ADDRESS_SUCCESS] = (state) => ({
 reduce[addressesConstants.VERIFY_ADDRESS_FAIL] = (state) => ({
     ...state,
     isLoading: {...state.isLoading, [addressesConstants.VERIFY_ADDRESS_REQUEST]: false}
+});
+
+reduce[addressesConstants.PUT_ADDRESS_FILTER_VALUES] = (state, action) => ({
+    ...state,
+    filterValues: action.payload,
 });
 
 export default (state = initialState(), action) => reduce[action.type] ? reduce[action.type](state, action) : state;

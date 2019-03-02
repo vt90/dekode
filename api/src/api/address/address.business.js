@@ -119,14 +119,15 @@ export const update = async (req, res, next) => {
 export const findAddressesSummary = async (req, res, next) => {
     try {
         // const x = await Address.summary();
-        const nrOfAddresses = await Address.estimatedDocumentCount().exec();
+        // const nrOfAddresses = await Address.estimatedDocumentCount().exec();
         const nrOfBlackListedAddresses = await Address.count({flag: 'black'}).exec();
         const nrOfGrayListedAddresses = await Address.count({flag: 'grey'}).exec();
         const nrOfVerifiedAddresses = await Address.count({credibility: 'verified'}).exec();
         const nrOfSources = await Source.estimatedDocumentCount().exec();
         const lastInsertedBlock = await Global.findOne().select(["-_id", "-__v"]).exec();
         const result = {
-            nrOfAddresses,
+            //TODO GET RID OF DIS
+            nrOfAddresses: 0,
             nrOfBlackListedAddresses,
             nrOfGrayListedAddresses,
             nrOfVerifiedAddresses,
@@ -144,13 +145,15 @@ export const filterAddresses = async (req, res, next) => {
     try {
         const {term, type, flag, credibility} = req.body;
         const pageNumber = +req.body.pageNumber || 1;
-        const pageSize = +req.body.pageSize || 25;
-        const {addresses, totalEntities} = await Address.filter({term, type, flag, credibility, pageNumber, pageSize});
+        // const pageSize = +req.body.pageSize || 25;
+        const pageSize = 25;
+        // const {addresses, totalEntities} = await Address.filter({term, type, flag, credibility, pageNumber, pageSize});
+        const addresses = await Address.filter({term, type, flag, credibility, pageNumber, pageSize});
         res.status(httpStatus.OK).json({
             pageNumber,
-            pageSize,
+            // pageSize,
             addresses,
-            totalEntities
+            // totalEntities
         });
     } catch (error) {
         next(error);

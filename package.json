@@ -61,6 +61,7 @@
     "redux": "4.0.1",
     "redux-form": "8.1.0",
     "redux-thunk": "2.3.0",
+    "reselect": "4.0.0",
     "swagger-ui-express": "4.0.2",
     "wallet-address-validator": "0.2.4",
     "winston": "3.2.1"
