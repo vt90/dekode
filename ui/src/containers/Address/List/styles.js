@@ -36,6 +36,10 @@ export default (theme) => {
                 fontWeight: 500,
                 color: '#FFF',
             }
+        },
+        pagination: {
+            display: 'flex',
+            justifyContent: 'flex-end',
         }
     }
 }

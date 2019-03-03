@@ -1,4 +1,4 @@
-import {addressesConstants} from 'constants/address';
+import {addressesConstants, addressInitialFilterValues} from 'constants/address';
 
 const initialState = () => ({
     isVerified: true,
@@ -6,20 +6,15 @@ const initialState = () => ({
     isLoading: {},
     addresses: [],
     selectedAddress: null,
-    pageNumber: 1,
-    pageSize: 25,
-    totalEntities: 0,
+    hasNext: false,
+    hasPrevious: false,
     nrOfAddresses: 0,
     nrOfBlackListedAddresses: 0,
     nrOfGrayListedAddresses: 0,
     nrOfVerifiedAddresses: 0,
     nrOfSources: 0,
-    filterValues: {
-        term: null,
-        type: null,
-        credibility: null,
-        flag: 'black',
-    }
+    pageHistory: [],
+    filterValues: addressInitialFilterValues,
 });
 
 const reduce = {};
@@ -100,7 +95,20 @@ reduce[addressesConstants.VERIFY_ADDRESS_FAIL] = (state) => ({
 
 reduce[addressesConstants.PUT_ADDRESS_FILTER_VALUES] = (state, action) => ({
     ...state,
-    filterValues: action.payload,
+    filterValues: {
+        ...state.filterValues,
+        ...action.payload,
+    },
+});
+
+reduce[addressesConstants.PUT_ADDRESS_PAGE_HISTORY] = (state, action) => ({
+    ...state,
+    pageHistory: [...state.pageHistory, action.payload],
+});
+
+reduce[addressesConstants.SET_ADDRESS_PAGE_HISTORY] = (state, action) => ({
+    ...state,
+    pageHistory: [...action.payload],
 });
 
 export default (state = initialState(), action) => reduce[action.type] ? reduce[action.type](state, action) : state;

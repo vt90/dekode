@@ -1,4 +1,5 @@
 import React, {Fragment} from 'react';
+import cx from 'classnames';
 import compose from 'lodash/fp/compose';
 import {withStyles} from '@material-ui/core/styles';
 import Info from 'mdi-material-ui/Information';
@@ -9,7 +10,10 @@ import ListItem from '@material-ui/core/ListItemText';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 
-import TablePagination from '@material-ui/core/TablePagination';
+// import TablePagination from '@material-ui/core/TablePagination';
+import Button from '@material-ui/core/Button';
+import Next from '@material-ui/icons/NavigateNext';
+import Previous from '@material-ui/icons/NavigateBefore';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import AddressListItem from './Item';
@@ -19,14 +23,16 @@ import styles from './styles';
 const AddressesList = ({
                            initialFilterValues,
                            onFilterSubmit,
+                           putAddressFilterValues,
                            addresses,
+                           pageHistory,
                            classes,
+                           hasNext,
+                           hasPrevious,
                            isVerified,
                            verifyAddress,
-                           pageNumber,
-                           pageSize,
-                           totalEntities,
-                           onPaginationChange,
+                           getNextPage,
+                           getPreviousPage,
                        }) => {
     if (!addresses) return null;
 
@@ -54,6 +60,7 @@ const AddressesList = ({
                         <ListSubheader className={classes.subheader}>
                             <Header
                                 initialValues={initialFilterValues}
+                                putAddressFilterValues={putAddressFilterValues}
                                 onFilterSubmit={onFilterSubmit}
                             />
                             <Hidden smDown>
@@ -159,22 +166,10 @@ const AddressesList = ({
 
             {
                 addresses.length
-                    ? (
-                        <TablePagination
-                            rowsPerPageOptions={[5, 10, 25]}
-                            component="div"
-                            count={totalEntities}
-                            rowsPerPage={pageSize}
-                            page={pageNumber - 1}
-                            onChangePage={(_, page) => onPaginationChange({
-                                pageNumber: page + 1,
-                                pageSize: pageSize,
-                            })}
-                            onChangeRowsPerPage={(ev) => onPaginationChange({
-                                pageNumber: pageNumber,
-                                pageSize: ev.target.value,
-                            })}
-                        />
+                    ? (<div className={cx('flex', 'justify-end')}>
+                            <Button disabled={pageHistory.length === 0} onClick={getPreviousPage}><Previous/></Button>
+                            <Button disabled={!hasNext} onClick={getNextPage}><Next/></Button>
+                        </div>
                     )
                     : null
             }

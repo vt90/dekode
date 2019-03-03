@@ -1,6 +1,7 @@
 import http from 'config/http';
 import {ADDRESS_API} from 'constants/api-routes';
 import {addressesConstants} from 'constants/address';
+import {getSearchParams} from 'misc';
 
 export const create = (data) => http.post(`${ADDRESS_API}`, data);
 export const get = (id, params) => id ? http.get(`${ADDRESS_API}/address/${id}`) : http.post(`${ADDRESS_API}/filter`, params);
@@ -18,15 +19,31 @@ export const getAddress = (address) => async (dispatch) => {
 
 export const getAddresses = (params = {}) => async dispatch => {
     try {
-        // make sure to not send 'false' values: '', null
-        const searchParams = {};
-        for (let key in params) {
-            if (params[key]) searchParams[key] = params[key];
-        }
-
+        const searchParams = getSearchParams(params);
         dispatch(getAddressesRequest(searchParams));
         const result = await get(null, searchParams);
         dispatch(getAddressesSuccess(result));
+    } catch (error) {
+        dispatch(getAddressesFail(error));
+    }
+};
+
+export const getAddressesNextPage = (params = {}) => async dispatch => {
+    try {
+        dispatch(putAddressAddressPageHistory({id: params.id}));
+        dispatch(getAddresses(params));
+    } catch (error) {
+        dispatch(getAddressesFail(error));
+    }
+};
+
+export const getAddressesPreviousPage = (params = {}) => async (dispatch, getState) => {
+    try {
+        const pageHistory = [...getState().address.pageHistory];
+        pageHistory.pop();
+        if (pageHistory.length > 0) params.id = pageHistory[pageHistory.length - 1].id;
+        dispatch(setAddressAddressPageHistory(pageHistory));
+        dispatch(getAddresses(params));
     } catch (error) {
         dispatch(getAddressesFail(error));
     }
@@ -48,7 +65,7 @@ export const createAddresses = (data) => async (dispatch) => {
         const result = await create(data);
         dispatch(createAddressesSuccess(result));
         dispatch(toggleCreateOpen(false));
-        // ToDo call getAddresses with new filterw
+        // ToDo call getAddresses with new filter
     } catch (error) {
         dispatch(createAddressesFail(error));
     }
@@ -87,3 +104,5 @@ const createAddressesFail = error => ({type: addressesConstants.CREATE_ADDRESS_F
 
 export const toggleCreateOpen = payload => ({type: addressesConstants.TOGGLE_CREATE_OPEN, payload});
 export const putAddressFilterValues = payload => ({type: addressesConstants.PUT_ADDRESS_FILTER_VALUES, payload});
+export const putAddressAddressPageHistory = payload => ({type: addressesConstants.PUT_ADDRESS_PAGE_HISTORY, payload});
+export const setAddressAddressPageHistory = payload => ({type: addressesConstants.SET_ADDRESS_PAGE_HISTORY, payload});

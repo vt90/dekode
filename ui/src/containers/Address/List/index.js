@@ -7,27 +7,22 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import {getFormValues} from 'redux-form';
 import {
     createAddresses,
     getAddresses,
     getAddressesSummary,
     toggleCreateOpen,
+    putAddressFilterValues,
+    getAddressesNextPage,
+    getAddressesPreviousPage,
+    setAddressAddressPageHistory,
 } from 'actions/address';
 import Create from 'components/Address/Create/index';
 import List from 'components/Address/List/index';
 import SummaryReport from 'components/Address/Reports/Summary/index';
 import Loading from 'components/Loading/index';
-import {addressesConstants} from 'constants/address';
-import merge from 'lodash/merge';
+import {addressesConstants, addressInitialFilterValues} from 'constants/address';
 import styles from './styles';
-
-// const initialFilterValues = {
-//     term: '',
-//     type: null,
-//     flag: null,
-//     credibility: undefined,
-// };
 
 const initialCreateValues = {
     addresses: [''],
@@ -35,13 +30,35 @@ const initialCreateValues = {
 };
 
 class Address extends Component {
-    getAddresses = (pNumber = 1, pSize) => {
-        const {filterFormValues, getAddresses, pageNumber, pageSize} = this.props;
 
+    getAddresses = (id, next) => {
+        const {filterFormValues, getAddresses, setAddressAddressPageHistory} = this.props;
+        setAddressAddressPageHistory([]);
         getAddresses({
             ...filterFormValues,
-            pageNumber: pNumber || pageNumber,
-            pageSize: pSize || pageSize,
+            id,
+            next,
+        });
+    };
+
+    getNextPage = () => {
+        const {addresses} = this.props;
+        const {filterFormValues, getAddressesNextPage} = this.props;
+        const id = addresses[addresses.length - 1]._id;
+        const next = true;
+        getAddressesNextPage({
+            ...filterFormValues,
+            id,
+            next,
+        });
+    };
+
+    getPreviousPage = () => {
+        const {filterFormValues, getAddressesPreviousPage} = this.props;
+        const next = true;
+        getAddressesPreviousPage({
+            ...filterFormValues,
+            next,
         });
     };
 
@@ -65,16 +82,16 @@ class Address extends Component {
             classes,
             isCreateOpen,
             isLoading,
-            pageNumber,
-            pageSize,
+            hasNext,
+            hasPrevious,
             toggleCreateOpen,
-            totalEntities,
             nrOfAddresses,
             nrOfBlackListedAddresses,
             nrOfGrayListedAddresses,
             nrOfVerifiedAddresses,
             nrOfSources,
             filterFormValues,
+            putAddressFilterValues,
         } = this.props;
 
         return (
@@ -136,16 +153,16 @@ class Address extends Component {
                                         >
                                             <List
                                                 initialFilterValues={filterFormValues}
-                                                onFilterSubmit={() => this.getAddresses(1)}
+                                                onFilterSubmit={() => this.getAddresses()}
+                                                putAddressFilterValues={putAddressFilterValues}
                                                 addresses={this.props.addresses}
+                                                pageHistory={this.props.pageHistory}
                                                 isVerified={this.props.isVerified}
                                                 verifyAddress={this.verifyAddress}
-                                                pageNumber={pageNumber}
-                                                pageSize={pageSize}
-                                                totalEntities={totalEntities}
-                                                onPaginationChange={
-                                                    ({pageNumber, pageSize}) => this.getAddresses(pageNumber, pageSize)
-                                                }
+                                                hasNext={hasNext}
+                                                hasPrevious={hasPrevious}
+                                                getNextPage={this.getNextPage}
+                                                getPreviousPage={this.getPreviousPage}
                                             />
                                         </Paper>
                                     )
@@ -181,13 +198,16 @@ class Address extends Component {
 
     componentDidMount() {
         const {filterFormValues, getAddresses, getAddressesSummary} = this.props;
-        getAddresses({pageNumber: 1, pageSize: 25, ...filterFormValues});
+        getAddresses({...filterFormValues});
 
         getAddressesSummary();
     }
 
-    componentWillMount() {
+    componentWillUnmount() {
+        const {putAddressFilterValues} = this.props;
 
+        putAddressFilterValues(addressInitialFilterValues);
+        setAddressAddressPageHistory([]);
     }
 
 }
@@ -196,9 +216,8 @@ const mapStateToProps = (state) => {
     const {address} = state;
     return {
         addresses: address.addresses,
-        pageNumber: address.pageNumber,
-        pageSize: address.pageSize,
-        totalEntities: address.totalEntities,
+        hasNext: address.hasNext,
+        hasPrevious: address.hasPrevious,
         isVerified: address.isVerified,
         isLoading: address.isLoading,
         isCreateOpen: address.isCreateOpen,
@@ -207,9 +226,8 @@ const mapStateToProps = (state) => {
         nrOfGrayListedAddresses: address.nrOfGrayListedAddresses,
         nrOfVerifiedAddresses: address.nrOfVerifiedAddresses,
         nrOfSources: address.nrOfSources,
-        //TODO replace this with action putAddressFilterValues
-        // this modifies the state values directly
-        filterFormValues: merge(address.filterValues, getFormValues('AddressesFilterForm')(state)),
+        filterFormValues: address.filterValues,
+        pageHistory: address.pageHistory,
     }
 };
 
@@ -218,6 +236,10 @@ const mapDispatchToProps = {
     getAddresses,
     getAddressesSummary,
     toggleCreateOpen,
+    putAddressFilterValues,
+    getAddressesNextPage,
+    getAddressesPreviousPage,
+    setAddressAddressPageHistory,
 };
 
 export default compose(

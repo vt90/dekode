@@ -22,7 +22,9 @@ export const addressesConstants = {
     VERIFY_ADDRESS_SUCCESS: "@address/VERIFY_ADDRESS_SUCCESS",
     VERIFY_ADDRESS_FAIL: "@address/VERIFY_ADDRESS_FAIL",
 
-    PUT_ADDRESS_FILTER_VALUES: "@address/PUT_ADDRESS_FILTER_VALUES"
+    PUT_ADDRESS_FILTER_VALUES: "@address/PUT_ADDRESS_FILTER_VALUES",
+    PUT_ADDRESS_PAGE_HISTORY: "@address/PUT_ADDRESS_PAGE_HISTORY",
+    SET_ADDRESS_PAGE_HISTORY: "@address/SET_ADDRESS_PAGE_HISTORY",
 };
 
 export const ADDRESS_TYPES = {
@@ -43,4 +45,11 @@ export const FLAG_TYPES = {
     WHITE: 'white',
     GREY: 'grey',
     Black: 'black',
+};
+
+export const addressInitialFilterValues = {
+    term: null,
+    type: null,
+    credibility: null,
+    flag: 'black',
 };

@@ -125,54 +125,13 @@ addressSchema.statics = {
         }
     },
 
-    async list({pageSize, options = {}}) {
+    async list({pageSize, options = {}, sort = {}}) {
         try {
             const select = ['-sources', '-__v'];
-            return await this.find(options).sort({_id: 1}).limit(pageSize + 1).select(select).exec();
+            return await this.find(options).sort(sort).limit(pageSize + 1).select(select).exec();
         } catch (error) {
             throw error;
         }
-        // const options = {
-        //     status: {$ne: ['grey', 'black']},
-        //     isVerified: {$eq: ["isVerified", isVerified]},
-        // };
-        // if (isVerified === false) {
-        //     options.status.$ne[1] = 'white';
-        // }
-        // const select = isVerified === true ? '-context' : '+context';
-        //
-        // return this.aggregate([
-        //     {
-        //         $group: {
-        //             _id: null,
-        //             count: {$sum: 1},
-        //             data:{
-        //                 $push:{
-        //                     address:'$address',
-        //                     status: options.status,
-        //                     isVerified: options.isVerified,
-        //                     // context:isVerified ?'$context' :
-        //                 }
-        //             },
-        //         }
-        //         //     $project: {
-        //         //         address: 1,
-        //         //         status: options.status,
-        //         //         isVerified: options.isVerified,
-        //         //         context: 1,
-        //         //         count: '$sum',
-        //         //         _id: 1,
-        //         //     }
-        //     },
-        // ]).exec();
-        // return this.find(options)
-        //     .skip(+pageNumber * +pageSize)
-        //     .limit(+pageSize)
-        //     .sort({createdAt: -1})
-        //     .select(select)
-        //     .select('-__v')
-        //     .populate('context')
-        //     .exec();
     },
 
     async filter({
@@ -182,28 +141,21 @@ addressSchema.statics = {
                      credibility,
                      pageSize,
                      id,
-                     next = true,
                  }) {
         try {
             const options = {};
+            const sort = {_id: 1};
+            if (id) options._id = {'$gt': id};
             if (term) options.address = {'$eq': term};
             if (type) options.type = {'$eq': type};
             if (flag) options.flag = {'$eq': flag};
             if (credibility) options.credibility = {'$eq': credibility};
-            if (next && id) {
-                options._id = {'$gt': id};
-            } else if (!next && id) {
-                options._id = {'$lt': id};
-            }
             const addresses = await this.list({pageSize, options});
-            let hasPrevious = true;
-            let hasNext = true;
-            if (!id) hasPrevious = false;
-            if (addresses.length === pageSize) {
-                if (next) hasNext = false;
-                else hasPrevious = false;
-            }
-            return {addresses, hasPrevious, hasNext};
+            return {
+                addresses,
+                hasNext: addresses.length >= pageSize,
+                sort
+            };
         } catch (error) {
             throw error;
         }

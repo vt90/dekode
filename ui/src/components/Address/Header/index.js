@@ -1,9 +1,9 @@
 /**
  * Created by vladtomsa on 08/01/2019
  */
-import React, { Fragment, useState } from 'react';
+import React, {Fragment, useState} from 'react';
 import compose from 'lodash/fp/compose';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -16,34 +16,35 @@ import Search from 'mdi-material-ui/Magnify';
 import Filter from '../Filter';
 import styles from './styles';
 
-const AddressesHeader = ({ classes, initialValues, onFilterSubmit }) => {
+const AddressesHeader = ({classes, initialValues, putAddressFilterValues, onFilterSubmit}) => {
     const [isExpandend, setExpanded] = useState(false);
 
     return (
-       <Fragment>
-           <ExpansionPanel
-               classes={{ root: classes.root }}
-               expanded={isExpandend}
-               onChange={() => setExpanded(!isExpandend)}
-           >
-               <ExpansionPanelSummary
-                   className={classes.expansionPanelSummary}
-                   expandIcon={isExpandend ? <Close/> : <Search />}
-               >
-                   <Typography variant="h4" color="textSecondary">Addresses</Typography>
-               </ExpansionPanelSummary>
-               <ExpansionPanelDetails className={classes.expansionPanelDetails}>
-                   <Card square className={classes.filter}>
-                       <CardContent>
-                           <Filter
-                               initialValues={initialValues}
-                               onSubmit={onFilterSubmit}
-                           />
-                       </CardContent>
-                   </Card>
-               </ExpansionPanelDetails>
-           </ExpansionPanel>
-       </Fragment>
+        <Fragment>
+            <ExpansionPanel
+                classes={{root: classes.root}}
+                expanded={isExpandend}
+                onChange={() => setExpanded(!isExpandend)}
+            >
+                <ExpansionPanelSummary
+                    className={classes.expansionPanelSummary}
+                    expandIcon={isExpandend ? <Close/> : <Search/>}
+                >
+                    <Typography variant="h4" color="textSecondary">Addresses</Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails className={classes.expansionPanelDetails}>
+                    <Card square className={classes.filter}>
+                        <CardContent>
+                            <Filter
+                                initialValues={initialValues}
+                                putAddressFilterValues={putAddressFilterValues}
+                                onSubmit={onFilterSubmit}
+                            />
+                        </CardContent>
+                    </Card>
+                </ExpansionPanelDetails>
+            </ExpansionPanel>
+        </Fragment>
     );
 };
 

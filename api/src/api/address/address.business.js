@@ -119,7 +119,7 @@ export const update = async (req, res, next) => {
 export const findAddressesSummary = async (req, res, next) => {
     try {
         // const x = await Address.summary();
-        // const nrOfAddresses = await Address.estimatedDocumentCount().exec();
+        const nrOfAddresses = await Address.estimatedDocumentCount().exec();
         const nrOfBlackListedAddresses = await Address.count({flag: 'black'}).exec();
         const nrOfGrayListedAddresses = await Address.count({flag: 'grey'}).exec();
         const nrOfVerifiedAddresses = await Address.count({credibility: 'verified'}).exec();
@@ -127,7 +127,7 @@ export const findAddressesSummary = async (req, res, next) => {
         const lastInsertedBlock = await Global.findOne().select(["-_id", "-__v"]).exec();
         const result = {
             //TODO GET RID OF DIS
-            nrOfAddresses: 0,
+            nrOfAddresses: nrOfAddresses,
             nrOfBlackListedAddresses,
             nrOfGrayListedAddresses,
             nrOfVerifiedAddresses,
@@ -145,7 +145,7 @@ export const filterAddresses = async (req, res, next) => {
     try {
         const {term, type, flag, credibility, id, next} = req.body;
         const pageSize = 25;
-        const {addresses, hasNext, hasPrevious} = await Address.filter({
+        const {addresses, hasNext} = await Address.filter({
             term,
             type,
             flag,
@@ -154,9 +154,8 @@ export const filterAddresses = async (req, res, next) => {
             id,
             next: next,
         });
-        addresses.pop();
+        if (addresses.length > pageSize) addresses.pop();
         res.status(httpStatus.OK).json({
-            hasPrevious,
             hasNext,
             addresses,
         });

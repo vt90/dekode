@@ -42,24 +42,23 @@ const validate = (values) => {
     return errors;
 };
 
-const AddressesFilterForm = ({handleSubmit}) => {
-    const onInputChange = () => {
-        setTimeout(handleSubmit, 100);
-    };
+const AddressesFilterForm = ({handleSubmit, putAddressFilterValues}) => {
+    const onInputChange = (e, nextValue, previousValue, field) => putAddressFilterValues({[field]: nextValue});
 
     const filterFormFieldStyle = {
-      backgroundColor: '#FFFFFF',
+        backgroundColor: '#FFFFFF',
     };
 
     return (
         <form onSubmit={handleSubmit}>
-            <br />
+            <br/>
             <Grid container spacing={16}>
                 <Grid item xs={12}>
                     <Field
                         name="term"
                         component={RenderTextField}
                         label="Address"
+                        onChange={onInputChange}
                         inputStyle={filterFormFieldStyle}
                         variant="outlined"
                     />
