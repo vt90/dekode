@@ -19,7 +19,9 @@ export const getTransactionsByAddress = (address) => async dispatch => {
                 txid,
                 income,
                 value: income ? transactionAddress.vout : transactionAddress.value,
-            })
+                vin,
+                vout
+            });
         });
         dispatch(getTransactionByAddressSuccess({...result, transactions}));
     } catch (error) {

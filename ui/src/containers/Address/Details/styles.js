@@ -18,7 +18,7 @@ export default (theme) => {
         },
         header: {
             '& h4': {
-              wordBreak: 'break-all',
+                wordBreak: 'break-all',
             },
             [theme.breakpoints.up('sm')]: {
                 padding: '80px 40px !important',
@@ -34,7 +34,10 @@ export default (theme) => {
             padding: 16,
         },
         tabHeader: {
-          marginBottom: 3,
+            marginBottom: 3,
         },
+        tags: {
+            marginLeft: 5,
+        }
     }
 }

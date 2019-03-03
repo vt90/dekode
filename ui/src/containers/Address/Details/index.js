@@ -4,6 +4,7 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom'
 import {connect} from 'react-redux';
+import cx from 'classnames';
 import compose from 'lodash/fp/compose';
 import {getAddress} from 'actions/address';
 import {getTransactionsByAddress} from 'actions/transaction';
@@ -22,6 +23,7 @@ import Tab from '@material-ui/core/Tab';
 import Back from 'mdi-material-ui/ChevronLeft';
 import SourcesTimeline from './SourcesTimeline';
 import TransactionsList from './TransactionsList';
+import TransactionsFlow from './TransactionsFlow';
 import styles from './styles';
 
 const TABS = {
@@ -63,9 +65,14 @@ class AddressDetails extends Component {
 
         switch (currentTab) {
             case TABS.SOURCES.value:
-                return <SourcesTimeline sources={selectedAddress.sources}/>;
+            return <SourcesTimeline sources={selectedAddress.sources}/>;
             case TABS.TRANSACTIONS.value:
                 return <TransactionsList transactions={transactions}/>;
+            case TABS.FLOW.value:
+                return <TransactionsFlow
+                    analysedAddress={selectedAddress.address}
+                    transactions={transactions}
+                />;
             default:
                 return <pre>{JSON.stringify(selectedAddress, null, 2)}</pre>;
         }
@@ -100,10 +107,16 @@ class AddressDetails extends Component {
                         <Typography variant="h4" gutterBottom>
                             {selectedAddress.address}
                         </Typography>
-
-                        <Typography variant="subtitle2">
-                            {selectedAddress.type === ADDRESS_TYPES.UNKNOWN ? 'Unknown' : selectedAddress.type}&nbsp;address
-                        </Typography>
+                        <div className={cx('flex')}>
+                            <Typography variant="subtitle2">
+                                {selectedAddress.type === ADDRESS_TYPES.UNKNOWN ? 'Unknown' : selectedAddress.type}&nbsp;address
+                            </Typography>
+                            {selectedAddress.tags.length > 0 && selectedAddress.tags.map((tag, index) => (
+                                <Typography className={cx(classes.tags)} variant="subtitle2" key={index}>
+                                    #{tag}
+                                </Typography>)
+                            )}
+                        </div>
                     </CardContent>
                 </Paper>
 
@@ -144,9 +157,12 @@ class AddressDetails extends Component {
     }
 
     componentDidMount() {
-        const {getAddress, match: {params: {address}}} = this.props;
+        const {getAddress, match: {params: {address}}, getTransactionsByAddress} = this.props;
 
         getAddress(address);
+
+        getTransactionsByAddress(address);
+
     }
 }
 

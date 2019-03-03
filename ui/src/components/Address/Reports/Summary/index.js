@@ -33,7 +33,7 @@ const colors = [
 class SummaryReport extends PureComponent {
     render() {
         const {
-            nrOfAddresses,
+            // nrOfAddresses,
             nrOfBlackListedAddresses,
             nrOfGrayListedAddresses,
             nrOfVerifiedAddresses,
@@ -44,7 +44,7 @@ class SummaryReport extends PureComponent {
             { name: 'Verified addresses', value: nrOfVerifiedAddresses, fill: 'url(#green)', color: 'green'},
             { name: 'Blacked addresses', value: nrOfBlackListedAddresses, fill: 'url(#pink)', color: 'pink'},
             { name: 'Addresses being processed', value: nrOfGrayListedAddresses, fill: 'url(#amber)', color: 'amber'},
-            { name: 'Total address', value: nrOfAddresses, fill: 'url(#cyan)', color: 'cyan'},
+            // { name: 'Total address', value: nrOfAddresses, fill: 'url(#cyan)', color: 'cyan'},
         ];
 
         return (
