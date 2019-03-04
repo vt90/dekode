@@ -6,9 +6,10 @@ const blockSchema = Schema({
 
     hash: {
         type: String,
-        trim: true,
         required: true,
-        index: true
+        unique: true,
+        index: true,
+        trim: true,
     },
 
     merkleroot: {
@@ -57,10 +58,6 @@ const blockSchema = Schema({
         type: Number,
     },
 
-    medianDate: {
-        type: Date,
-    },
-
     nonce: {
         type: Number,
     },
@@ -82,15 +79,27 @@ const blockSchema = Schema({
     },
 
     previousblockhash: {
-        type: String
+        type: String,
+        required: true,
+        unique: true,
+        index: true,
+        trim: true,
     },
 
     nextblockhash: {
-        type: String
+        type: String,
+        required: true,
+        unique: true,
+        index: true,
+        trim: true,
     },
 
     tx: [{
-        type: String
+        type: String,
+        required: true,
+        unique: true,
+        index: true,
+        trim: true,
     }]
 
 }, {timestamps: true});

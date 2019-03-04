@@ -5,6 +5,7 @@ const globalSchema = Schema({
     lastInsertedBlock: {
         type: Number,
         default: 0,
+        index: true,
     }
 
 });

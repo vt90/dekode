@@ -8,17 +8,109 @@ const transactionSchema = Schema({
 
     txid: {
         type: String,
-        trim: true,
         required: true,
-        index: true
+        unique: true,
+        index: true,
+        trim: true,
     },
 
     hash: {
         type: String,
-        trim: true,
         required: true,
-        index: true
+        unique: true,
+        index: true,
+        trim: true,
     },
+
+    vin: [{
+
+        address: {
+            type: String,
+            index: true,
+        },
+
+        txid: {
+            type: String,
+            index: true,
+            trim: true,
+        },
+
+        value: {
+            type: Number,
+        },
+
+        vout: {
+            type: Number,
+        },
+
+        scriptSig: {
+
+            asm: {
+                type: String,
+            },
+
+            hex: {
+                type: String,
+            },
+        },
+
+        coinbase: {
+            type: String,
+        },
+
+        sequence: {
+            type: Number,
+        },
+
+    }],
+
+    vout: [{
+
+        address: {
+            type: String,
+            index: true,
+            trim: true,
+        },
+
+        value: {
+            type: Number,
+        },
+
+        n: {
+            type: Number,
+        },
+
+        scriptPubKey: {
+
+            asm: {
+                type: String,
+            },
+
+            hex: {
+                type: String,
+            },
+
+            reqSigs: {
+                type: Number,
+            },
+
+            type: {
+                type: String,
+            },
+
+            addresses: [{
+                type: String,
+                index: true,
+                trim: true,
+            }],
+
+        },
+
+        sequence: {
+            type: Number,
+        },
+
+    }],
 
     version: {
         type: Number,
@@ -56,109 +148,9 @@ const transactionSchema = Schema({
         type: Number,
     },
 
-    date: {
-        type: Date,
-    },
-
     blocktime: {
         type: Number,
     },
-
-    blocktDate: {
-        type: Date,
-    },
-
-    vin: [{
-
-        // address: {
-        //     type: Schema.Types.ObjectId,
-        //     ref: Address,
-        // },
-
-        address: {
-            type: String,
-            index: true,
-        },
-
-        txid: {
-            type: String,
-            trim: true,
-            index: true
-        },
-
-        value: {
-            type: Number,
-        },
-
-        vout: {
-            type: Number,
-        },
-
-        scriptSig: {
-
-            asm: {
-                type: String,
-            },
-
-            hex: {
-                type: String,
-            },
-        },
-
-        coinbase: {
-            type: String,
-        },
-
-        sequence: {
-            type: Number,
-        },
-
-    }],
-
-    vout: [{
-
-        address: {
-            type: String,
-            index: true,
-        },
-
-        value: {
-            type: Number,
-        },
-
-        n: {
-            type: Number,
-        },
-
-        scriptPubKey: {
-
-            asm: {
-                type: String,
-            },
-
-            hex: {
-                type: String,
-            },
-
-            reqSigs: {
-                type: Number,
-            },
-
-            type: {
-                type: String,
-            },
-
-            addresses: [{
-                type: String,
-            }],
-
-        },
-
-        sequence: {
-            type: Number,
-        },
-
-    }],
 
 });
 
