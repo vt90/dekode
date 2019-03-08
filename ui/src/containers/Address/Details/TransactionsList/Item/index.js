@@ -1,143 +1,92 @@
 import React from 'react';
 import compose from 'lodash/fp/compose';
-import ListItem from '@material-ui/core/ListItem';
-import Hidden from '@material-ui/core/Hidden';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
+import Divider from '@material-ui/core/Divider';
+import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Grid from "@material-ui/core/Grid";
+import Bitcoin from 'mdi-material-ui/Bitcoin';
 import Income from 'mdi-material-ui/ArrowDownBoldCircle';
 import Outcome from 'mdi-material-ui/ArrowUpBoldCircle';
 import withStyles from '@material-ui/core/styles/withStyles';
-import withWidth from '@material-ui/core/withWidth';
 import styles from './styles';
 
 const TransactionItem = ({
                              classes,
-                             divider,
+                             selectedAddress,
                              transaction,
-                             width,
                          }) => {
-    const SmallListItemSection = ({label, children}) => (
-        <div>
-            <Hidden mdUp>
-                <Typography variant="subtitle1" color="textSecondary">
-                    {label}:&nbsp;
-                </Typography>
-            </Hidden>
+    const cardHeaderProps = {
+        title: `Tx ID: ${transaction.txid}`,
+        titleTypographyProps: {
+          className: 'break-all',
+        },
+    };
 
-            {children}
-        </div>
-    );
-    return (
-        <ListItem
-            divider={!!divider}
-        >
-            <Grid
-                container
-                // justify="space-between"
-                // alignItems="center"
+    if (transaction.income) {
+        cardHeaderProps.avatar = <Income className={classes.income}/>;
+        cardHeaderProps.subheader = `Received on ${'tx.timestamp'}`;
+    } else {
+        cardHeaderProps.avatar = <Outcome className={classes.outcome}/>;
+        cardHeaderProps.subheader = `Sent on ${'tx.timestamp'}`;
+    }
+
+    const renderAddress = (txAddress) => {
+        return (
+            <Typography
+                className="break-all"
+                color={ txAddress === selectedAddress ? 'textPrimary' : 'textSecondary' }
+                variant={ txAddress === selectedAddress ? 'body1' : 'body2' }
             >
-                <Grid item xs={1}>
-                    {transaction.income ? <Income/> : <Outcome/>}
+                { txAddress }
+            </Typography>
+        );
+    };
+
+    return (
+        <Paper className={classes.root} elevation={6}>
+            <CardHeader {...cardHeaderProps}/>
+
+            <Divider/>
+
+            <CardContent>
+                <Grid container spacing={16}>
+                    <Grid item xs={12} md={6}>
+                        <Typography variant="caption" color="textSecondary">
+                            From
+                        </Typography>
+
+                        {
+                            transaction.vin.map(({address}) => renderAddress(address))
+                        }
+                    </Grid>
+
+                    <Grid item xs={12} md={6}>
+                        <Typography variant="caption" color="textSecondary">
+                            To
+                        </Typography>
+
+                        {
+                            transaction.vout.map(({address}) => renderAddress(address))
+                        }
+                    </Grid>
+
                 </Grid>
-                <Grid item xs={9}>
-                    <SmallListItemSection label="Txid">
-                        {transaction.txid}
-                    </SmallListItemSection>
-                </Grid>
-                <Grid item xs={2} md={true}>
-                    <SmallListItemSection label="value">
-                        {transaction.value}
-                    </SmallListItemSection>
-                </Grid>
-            </Grid>
-        </ListItem>
+            </CardContent>
+
+            <CardActions className="flex justify-end">
+                <Typography variant="subheading" className="flex align-center">
+                    { transaction.value }
+                    &nbsp;
+                    <Bitcoin />
+                </Typography>
+            </CardActions>
+        </Paper>
     );
 };
 
-// const AddressListItem = ({address, classes, divider, index, width}) => {
-//     const SmallListItemSection = ({label, children}) => (
-//         <div className={`flex align-center ${width === 'xs' || width === 'sm' ? '' : 'justify-center'}`}>
-//             <Hidden mdUp>
-//                 <Typography variant="subtitle1" color="textSecondary">
-//                     {label}:&nbsp;
-//                 </Typography>
-//             </Hidden>
-//
-//             {children}
-//         </div>
-//     );
-//
-//     const CredibilityIcon = credibilityIcon[address.credibility];
-//
-//     const FlagIcon = flagIcon[address.flag];
-//     return (
-//         <ListItem
-//             button
-//             component={Link}
-//             to={`/address/${address.address}`}
-//             divider={!!divider}
-//             key={address.address}
-//         >
-//             <Grid container justify="space-between" alignItems="center">
-//                 <Grid item xs={12} md={true}>
-//                     <Typography variant="subtitle2">
-//                         {address.address}
-//                     </Typography>
-//                 </Grid>
-//                 <Grid item xs={12} md={2}>
-//                     <SmallListItemSection label="Type">
-//                         {address.type}
-//                     </SmallListItemSection>
-//                 </Grid>
-//
-//                 <Grid item xs={12} md={2}>
-//                     <SmallListItemSection label="Credibility">
-//                         <Typography className="flex align-center">
-//                             <Hidden mdUp>
-//                                 {address.credibility}
-//                                 &nbsp;
-//                             </Hidden>
-//
-//                             {
-//                                 CredibilityIcon &&
-//                                 (<Tooltip title={address.credibility}>
-//                                     <CredibilityIcon
-//                                         className={classes[address.credibility.replace(/ /g, '')]}
-//                                     />
-//                                 </Tooltip>)
-//                             }
-//                         </Typography>
-//                     </SmallListItemSection>
-//                 </Grid>
-//
-//                 <Grid item xs={12} md={2}>
-//                     <SmallListItemSection label="Flag">
-//                         <SmallListItemSection label="Credibility">
-//                             <Typography className="flex align-center">
-//                                 <Hidden mdUp>
-//                                     {address.flag}
-//                                     &nbsp;
-//                                 </Hidden>
-//
-//                                 {
-//                                     FlagIcon &&
-//                                     (<Tooltip title={address.flag}>
-//                                         <FlagIcon
-//                                             className={classes[address.flag]}
-//                                         />
-//
-//                                     </Tooltip>)
-//                                 }
-//                             </Typography>
-//                         </SmallListItemSection>
-//                     </SmallListItemSection>
-//                 </Grid>
-//             </Grid>
-//         </ListItem>
-//     );
-// };
-//
 export default compose(
-    withWidth(),
     withStyles(styles),
 )(TransactionItem);

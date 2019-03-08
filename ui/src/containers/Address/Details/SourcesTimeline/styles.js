@@ -1,11 +1,10 @@
 /**
  * Created by vladtomsa on 2019-02-07
  */
-export default (theme) => {
+export default () => {
     return {
         root: {
-          padding: 16,
-            background: '#f5f5f5',
+            padding: 16,
         },
         chip: {
             height: 28,

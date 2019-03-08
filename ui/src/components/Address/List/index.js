@@ -9,13 +9,12 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItemText';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
-
-// import TablePagination from '@material-ui/core/TablePagination';
 import Button from '@material-ui/core/Button';
 import Next from '@material-ui/icons/NavigateNext';
 import Previous from '@material-ui/icons/NavigateBefore';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
+import { FLAG_DESCRIPTIONS } from 'constants/address';
 import AddressListItem from './Item';
 import Header from '../Header';
 import styles from './styles';
@@ -80,7 +79,7 @@ const AddressesList = ({
 
                                     <Grid item md={2}>
                                         <TitleItem
-                                            label="Credibility"
+                                            label="Verified"
                                             info={
                                                 <Fragment>
                                                     <p>The credibility for a given address can have one of the fallowing
@@ -102,23 +101,21 @@ const AddressesList = ({
 
                                     <Grid item md={2}>
                                         <TitleItem
-                                            label="Flag"
+                                            label="Threat"
                                             info={
                                                 <Fragment>
-                                                    <p>Depending on the number of sources the address was found, it's
-                                                        flag
-                                                        is set to:</p>
+                                                    <p>Depending on the number of sources the address was found, it can be:</p>
                                                     <ul>
                                                         <li>
-                                                            <strong>White</strong> - no sources are available
+                                                            <strong>{FLAG_DESCRIPTIONS.white}</strong> - no sources are available
                                                         </li>
 
                                                         <li>
-                                                            <strong>Grey</strong> - one source was submitted
+                                                            <strong>{FLAG_DESCRIPTIONS.grey}</strong> - one source was submitted
                                                         </li>
 
                                                         <li>
-                                                            <strong>Black</strong> - at least 2 sources where found for
+                                                            <strong>{FLAG_DESCRIPTIONS.black}</strong> - at least 2 sources where found for
                                                             the
                                                             address
                                                         </li>

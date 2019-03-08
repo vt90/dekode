@@ -11,8 +11,14 @@ export default (theme) => {
       notverified: {
           color: theme.palette.text.hint,
       },
+      white: {
+          color: theme.palette.text.hint,
+      },
       grey: {
           color: theme.palette.text.hint,
+      },
+      black: {
+          color: theme.palette.text.primary,
       }
   }
 };

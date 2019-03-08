@@ -1,18 +1,16 @@
 /**
  * Created by vladtomsa on 08/01/2019
  */
-import lightGreen from '@material-ui/core/colors/lightGreen';
-
-export default (theme) => {
+export default () => {
   return {
-      verified: {
-          color: lightGreen['A700'],
+      root: {
+        margin: 8,
       },
-      notverified: {
-          color: theme.palette.text.hint,
+      income: {
+          color: '#43a047',
       },
-      grey: {
-          color: theme.palette.text.hint,
-      }
-  }
+      outcome: {
+          color: '#fb8c00'
+      },
+  };
 };

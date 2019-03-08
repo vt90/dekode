@@ -4,23 +4,24 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom'
 import {connect} from 'react-redux';
-import cx from 'classnames';
 import compose from 'lodash/fp/compose';
 import {getAddress} from 'actions/address';
 import {getTransactionsByAddress} from 'actions/transaction';
 import Loading from 'components/Loading';
-import {addressesConstants, ADDRESS_TYPES} from 'constants/address';
-import {transactionConstants} from 'constants/transaction';
+import {addressesConstants} from 'constants/address';
 import {withStyles} from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
+import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CardContent from '@material-ui/core/CardContent';
+import Chip from '@material-ui/core/Chip';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Back from 'mdi-material-ui/ChevronLeft';
+import Pound from 'mdi-material-ui/Pound';
+import Header from './Header';
 import SourcesTimeline from './SourcesTimeline';
 import TransactionsList from './TransactionsList';
 import TransactionsFlow from './TransactionsFlow';
@@ -65,9 +66,9 @@ class AddressDetails extends Component {
 
         switch (currentTab) {
             case TABS.SOURCES.value:
-            return <SourcesTimeline sources={selectedAddress.sources}/>;
+                return <SourcesTimeline sources={selectedAddress.sources}/>;
             case TABS.TRANSACTIONS.value:
-                return <TransactionsList transactions={transactions}/>;
+                return <TransactionsList selectedAddress={selectedAddress.address} transactions={transactions}/>;
             case TABS.FLOW.value:
                 return <TransactionsFlow
                     analysedAddress={selectedAddress.address}
@@ -86,48 +87,57 @@ class AddressDetails extends Component {
             return <Loading message="Fetching address details"/>
         }
 
-        if (isLoading && isLoading[transactionConstants.GET_ADDRESS_TRANSACTIONS_REQUEST]) {
-            return <Loading message="Fetching transactions"/>
-        }
+        // if (isLoading && isLoading[transactionConstants.GET_ADDRESS_TRANSACTIONS_REQUEST]) {
+        //     return <Loading message="Fetching transactions"/>
+        // }
 
         if (!selectedAddress) return <Loading/>;
 
         return (
             <div>
-                <Paper square elevation={8} className={classes[selectedAddress.flag]}>
-                    <CardContent className={classes.header}>
-                        <Button
-                            component={Link}
-                            to="/"
-                            className={classes.backButton}
-                        >
-                            <Back/>&nbsp;Back to addresses
-                        </Button>
+                <Paper square elevation={8} className={classes.banner}>
+                    <CardContent>
+                        <div className={classes.header}>
+                            <Button
+                                component={Link}
+                                to="/"
+                                className={classes.backButton}
+                            >
+                                <Back/>&nbsp;Back to addresses
+                            </Button>
 
-                        <Typography variant="h4" gutterBottom>
-                            {selectedAddress.address}
-                        </Typography>
-                        <div className={cx('flex')}>
-                            <Typography variant="subtitle2">
-                                {selectedAddress.type === ADDRESS_TYPES.UNKNOWN ? 'Unknown' : selectedAddress.type}&nbsp;address
+                            <Typography variant="h4" gutterBottom>
+                                {selectedAddress.address}
                             </Typography>
-                            {selectedAddress.tags.length > 0 && selectedAddress.tags.map((tag, index) => (
-                                <Typography className={cx(classes.tags)} variant="subtitle2" key={index}>
-                                    #{tag}
-                                </Typography>)
-                            )}
                         </div>
+                        <div className="flex wrap-content">
+                            {
+                                selectedAddress.tags.length
+                                && selectedAddress.tags.map((tag, index) => (
+                                    <Chip
+                                        avatar={
+                                            <Avatar>
+                                                <Pound/>
+                                            </Avatar>
+                                        }
+                                        className={classes.chip}
+                                        key={index}
+                                        label={tag}
+                                    />
+                                ))
+                            }
+                        </div>
+
+                        <Header addressInfo={selectedAddress}/>
                     </CardContent>
                 </Paper>
 
                 <div className={classes.tabsContainer}>
                     <Grid container spacing={16} justify="center">
                         <Grid item xs={11}>
-                            <Paper elevation={8}>
-                                <AppBar
+                            <div>
+                                <div
                                     className={classes.tabHeader}
-                                    color="default"
-                                    position="static"
                                 >
                                     <Tabs
                                         value={currentTab}
@@ -140,15 +150,15 @@ class AddressDetails extends Component {
                                         {
                                             Object.keys(TABS).map(key => {
                                                 return (
-                                                    <Tab key={key} label={TABS[key].name}/>
+                                                    <Tab key={key} label={TABS[key].name} />
                                                 );
                                             })
                                         }
                                     </Tabs>
-                                </AppBar>
+                                </div>
 
                                 {this.getCurrentTabContent()}
-                            </Paper>
+                            </div>
                         </Grid>
                     </Grid>
                 </div>

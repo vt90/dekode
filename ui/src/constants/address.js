@@ -41,10 +41,21 @@ export const CREDIBILITY_TYPES = {
     NOT_VERIFIED: 'not verified',
 };
 
+export const CREDIBILITY_DESCRIPTIONS = {
+    verified: 'Verified',
+    'not verified': 'Not verified',
+};
+
 export const FLAG_TYPES = {
     WHITE: 'white',
     GREY: 'grey',
     Black: 'black',
+};
+
+export const FLAG_DESCRIPTIONS = {
+  white: 'Innocent',
+  grey: 'Possible threat',
+  black: 'Felon',
 };
 
 export const addressInitialFilterValues = {

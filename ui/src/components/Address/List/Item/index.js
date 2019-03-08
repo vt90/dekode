@@ -4,10 +4,11 @@
 import React from 'react';
 import {Link} from 'react-router-dom'
 import compose from 'lodash/fp/compose';
-import BlackFlag from 'mdi-material-ui/Flag';
-import GreyFlag from 'mdi-material-ui/FlagOutline';
+import AccountCheck from 'mdi-material-ui/AccountCheck';
+import Incognito from 'mdi-material-ui/Incognito';
+import Pirate from 'mdi-material-ui/Pirate';
 import Verified from 'mdi-material-ui/ShieldCheck';
-import NotVerified from 'mdi-material-ui/ShieldOutline';
+import NotVerified from 'mdi-material-ui/ShieldRemove';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import ListItem from '@material-ui/core/ListItem';
@@ -15,7 +16,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import withWidth from '@material-ui/core/withWidth';
 import {withStyles} from '@material-ui/core/styles';
-import {CREDIBILITY_TYPES, FLAG_TYPES} from 'constants/address';
+import {CREDIBILITY_TYPES, FLAG_TYPES, FLAG_DESCRIPTIONS} from 'constants/address';
 import styles from './styles';
 
 const credibilityIcon = {
@@ -24,8 +25,9 @@ const credibilityIcon = {
 };
 
 const flagIcon = {
-    [FLAG_TYPES.Black]: BlackFlag,
-    [FLAG_TYPES.GREY]: GreyFlag,
+    [FLAG_TYPES.WHITE]: AccountCheck,
+    [FLAG_TYPES.Black]: Pirate,
+    [FLAG_TYPES.GREY]: Incognito,
 };
 
 const AddressListItem = ({address, classes, divider, index, width}) => {
@@ -44,6 +46,7 @@ const AddressListItem = ({address, classes, divider, index, width}) => {
     const CredibilityIcon = credibilityIcon[address.credibility];
 
     const FlagIcon = flagIcon[address.flag];
+
     return (
         <ListItem
             button
@@ -95,7 +98,7 @@ const AddressListItem = ({address, classes, divider, index, width}) => {
 
                                 {
                                     FlagIcon &&
-                                    (<Tooltip title={address.flag}>
+                                    (<Tooltip title={FLAG_DESCRIPTIONS[address.flag]}>
                                         <FlagIcon
                                             className={classes[address.flag]}
                                         />

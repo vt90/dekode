@@ -7,7 +7,7 @@ import {reduxForm, Field} from 'redux-form';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import {RenderTextField, RenderSelectField} from 'components/FormInputs';
-import {ADDRESS_TYPES, CREDIBILITY_TYPES, FLAG_TYPES} from 'constants/address';
+import {ADDRESS_TYPES, CREDIBILITY_TYPES, FLAG_TYPES, FLAG_DESCRIPTIONS} from 'constants/address';
 
 const addressTypeOptions = Object.keys(ADDRESS_TYPES).map(key => {
     return {
@@ -25,7 +25,7 @@ const credibilityOptions = Object.keys(CREDIBILITY_TYPES).map(key => {
 
 const flagOptions = Object.keys(FLAG_TYPES).map(key => {
     return {
-        name: FLAG_TYPES[key],
+        name: FLAG_DESCRIPTIONS[FLAG_TYPES[key]],
         value: FLAG_TYPES[key],
     };
 });
@@ -81,7 +81,7 @@ const AddressesFilterForm = ({handleSubmit, putAddressFilterValues}) => {
                         name="credibility"
                         component={RenderSelectField}
                         options={credibilityOptions}
-                        label="Credibility"
+                        label="Verified"
                         onChange={onInputChange}
                         style={filterFormFieldStyle}
                         variant="outlined"
@@ -94,7 +94,7 @@ const AddressesFilterForm = ({handleSubmit, putAddressFilterValues}) => {
                         component={RenderSelectField}
                         options={flagOptions}
                         onChange={onInputChange}
-                        label="Flag"
+                        label="Threat"
                         style={filterFormFieldStyle}
                         variant="outlined"
                     />

@@ -8,17 +8,22 @@ export const getTransactionsByAddress = (address) => async dispatch => {
     try {
         dispatch(getTransactionByAddressRequest());
         const result = await getTransactionsAddress(address);
+
         const transactions = result.transactions.map(({txid, vin, vout}) => {
-            let transactionAddress = vin.find(add => add.address === address);
+            // A bitcoin address is a sender if the address is found in the vin list
+            // Otherwise the address is a receiver
+            let transactionAddress = vout.find(add => add.address === address);
             let income = true;
+
             if (!transactionAddress) {
-                transactionAddress = vout.find(add => add.address === address);
+                transactionAddress = vin.find(add => add.address === address);
                 income = false;
             }
+
             return ({
                 txid,
                 income,
-                value: income ? transactionAddress.vout : transactionAddress.value,
+                value: income ? transactionAddress.value : transactionAddress.vout,
                 vin,
                 vout
             });
