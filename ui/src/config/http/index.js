@@ -5,7 +5,7 @@ const headers = {
     'Content-Type': 'application/json'
 };
 
-const baseURL = process.env.REACT_APP_DEKODE_API || 'http://54.37.188.120:9000';
+const baseURL = process.env.REACT_APP_DEKODE_API || 'http://localhost:9000';
 
 const http = Axios.create({
     baseURL,

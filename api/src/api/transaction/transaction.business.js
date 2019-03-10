@@ -29,7 +29,7 @@ export const listAddressTransactions = async (req, res, next) => {
     try {
         const {address} = req.params;
         const pageNumber = +req.query.pageNumber || 1;
-        const pageSize = +req.query.pageSize || 25;
+        const pageSize = +req.query.pageSize || 100;
         const {transactions,totalEntities} = await Transaction.listAddressTransactions({address, pageNumber, pageSize});
         res.status(httpStatus.OK).json({
             pageNumber,

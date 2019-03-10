@@ -160,6 +160,14 @@ const transactionSchema = Schema({
 
     }],
 
+}, {
+    toObject: {
+        virtuals: true,
+        getters: true
+    }, toJSON: {
+        virtuals: true,
+        getters: true
+    },
 });
 
 transactionSchema.statics = {
@@ -207,26 +215,51 @@ transactionSchema.statics = {
         }
     },
 
-    listAddressTransactions({address, pageNumber, pageSize}) {
+    async listAddressTransactions({address, pageNumber, pageSize}) {
         const customLabels = {
             docs: 'transactions',
             page: 'currentPage',
             limit: 'pageSize',
             totalDocs: 'totalEntities',
         };
-        const select = "-_id txid vin.address vout.address vin.vout vout.value";
-
+        const select = "-_id txid vin.address vout.address vin.vout vout.value date time";
         const options = {"$or": [{"vout.address": {"$in": [address]}}, {"vin.address": {"$in": [address]}}]};
 
         return TransactionModel.paginate(options, {
             page: pageNumber,
             limit: pageSize,
             select,
-            customLabels
+            customLabels,
+            // populate: [{path: 'vin.address', select: 'address type'}, {path: 'vout.address', select: 'address type'}],
+            populate: [
+                {
+                    path: 'vin.address',
+                    select: 'address type flag -_id'
+                },
+                {
+                    path: 'vout.address',
+                    select: 'address type flag -_id'
+                }],
         });
 
     }
 };
+
+transactionSchema.virtual('vin.address', {
+    ref: "Address",
+    foreignField: 'address',
+    localField: 'vin.address',
+    // justOne: false,
+    justOne: true,
+});
+
+transactionSchema.virtual('vout.address', {
+    ref: "Address",
+    foreignField: 'address',
+    localField: 'vout.address',
+    // justOne: false,
+    justOne: true,
+});
 
 transactionSchema.plugin(mongoosePaginate);
 

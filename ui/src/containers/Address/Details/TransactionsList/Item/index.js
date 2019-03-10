@@ -10,6 +10,7 @@ import Grid from "@material-ui/core/Grid";
 import Bitcoin from 'mdi-material-ui/Bitcoin';
 import Income from 'mdi-material-ui/ArrowDownBoldCircle';
 import Outcome from 'mdi-material-ui/ArrowUpBoldCircle';
+import moment from 'moment';
 import withStyles from '@material-ui/core/styles/withStyles';
 import styles from './styles';
 
@@ -21,26 +22,28 @@ const TransactionItem = ({
     const cardHeaderProps = {
         title: `Tx ID: ${transaction.txid}`,
         titleTypographyProps: {
-          className: 'break-all',
+            className: 'break-all',
         },
     };
 
+    const timestamp = moment(transaction.timestamp);
+
     if (transaction.income) {
         cardHeaderProps.avatar = <Income className={classes.income}/>;
-        cardHeaderProps.subheader = `Received on ${'tx.timestamp'}`;
+        cardHeaderProps.subheader = `Received on ${timestamp}`;
     } else {
         cardHeaderProps.avatar = <Outcome className={classes.outcome}/>;
-        cardHeaderProps.subheader = `Sent on ${'tx.timestamp'}`;
+        cardHeaderProps.subheader = `Sent on ${timestamp}`;
     }
 
     const renderAddress = (txAddress) => {
         return (
             <Typography
                 className="break-all"
-                color={ txAddress === selectedAddress ? 'textPrimary' : 'textSecondary' }
-                variant={ txAddress === selectedAddress ? 'body1' : 'body2' }
+                color={txAddress === selectedAddress ? 'textPrimary' : 'textSecondary'}
+                variant={txAddress === selectedAddress ? 'body1' : 'body2'}
             >
-                { txAddress }
+                {txAddress}
             </Typography>
         );
     };
@@ -78,9 +81,9 @@ const TransactionItem = ({
 
             <CardActions className="flex justify-end">
                 <Typography variant="subheading" className="flex align-center">
-                    { transaction.value }
+                    {transaction.value}
                     &nbsp;
-                    <Bitcoin />
+                    <Bitcoin/>
                 </Typography>
             </CardActions>
         </Paper>
