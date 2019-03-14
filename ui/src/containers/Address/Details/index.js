@@ -6,9 +6,10 @@ import {Link} from 'react-router-dom'
 import {connect} from 'react-redux';
 import compose from 'lodash/fp/compose';
 import {getAddress} from 'actions/address';
-import {getTransactionsByAddress} from 'actions/transaction';
+import {getTransactionsByAddress, getAddressFlow} from 'actions/transaction';
 import Loading from 'components/Loading';
 import {addressesConstants} from 'constants/address';
+import {transactionConstants} from 'constants/transaction';
 import {withStyles} from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -53,15 +54,15 @@ class AddressDetails extends Component {
     };
 
     onTabChange = (index) => {
-        const {selectedAddress: {address}, getTransactionsByAddress} = this.props;
-        if (index === TABS.TRANSACTIONS.value) {
-            getTransactionsByAddress(address);
+        const {selectedAddress: {address}, getAddressFlow} = this.props;
+        if (index === TABS.FLOW.value) {
+            getAddressFlow(address);
         }
         this.setState({currentTab: index});
     };
 
     getCurrentTabContent = () => {
-        const {selectedAddress, transactions} = this.props;
+        const {selectedAddress, transactions, chartData} = this.props;
         const {currentTab} = this.state;
 
         switch (currentTab) {
@@ -73,6 +74,7 @@ class AddressDetails extends Component {
                 return <TransactionsFlow
                     analysedAddress={selectedAddress.address}
                     transactions={transactions}
+                    chartData={chartData}
                 />;
             default:
                 return <pre>{JSON.stringify(selectedAddress, null, 2)}</pre>;
@@ -87,9 +89,15 @@ class AddressDetails extends Component {
             return <Loading message="Fetching address details"/>
         }
 
-        // if (isLoading && isLoading[transactionConstants.GET_ADDRESS_TRANSACTIONS_REQUEST]) {
-        //     return <Loading message="Fetching transactions"/>
-        // }
+        if (currentTab === TABS.TRANSACTIONS.value &&
+            isLoading && isLoading[transactionConstants.GET_ADDRESS_TRANSACTIONS_REQUEST]) {
+            return <Loading message="Fetching transactions"/>
+        }
+
+        if (currentTab === TABS.FLOW.value &&
+            isLoading && isLoading[transactionConstants.GET_ADDRESS_FLOW_REQUEST]) {
+            return <Loading message="Fetching flow data"/>
+        }
 
         if (!selectedAddress) return <Loading/>;
 
@@ -150,7 +158,7 @@ class AddressDetails extends Component {
                                         {
                                             Object.keys(TABS).map(key => {
                                                 return (
-                                                    <Tab key={key} label={TABS[key].name} />
+                                                    <Tab key={key} label={TABS[key].name}/>
                                                 );
                                             })
                                         }
@@ -182,12 +190,14 @@ const mapStateToProps = (state) => {
         isLoading: {...address.isLoading, ...transaction.isLoading},
         selectedAddress: address.selectedAddress,
         transactions: transaction.transactions,
+        chartData: transaction.chartData,
     }
 };
 
 const mapDispatchToProps = {
     getAddress,
     getTransactionsByAddress,
+    getAddressFlow,
 };
 
 export default compose(

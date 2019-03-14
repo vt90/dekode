@@ -4,60 +4,84 @@ import windowSize from 'react-window-size';
 import ReactTransactionsFlow from 'echarts-for-react';
 import {getNodes, getChartHeight} from 'misc';
 
-// import moment from 'moment';
+import moment from 'moment';
 
-// const DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm';
+const DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm';
 
 const TransactionsFlow = React.forwardRef(({
                                                analysedAddress,
-                                               chartData,
+                                               chartData: {transactions, nodes},
                                                onAddressChange,
                                                windowWidth,
-                                               transactions,
                                            }, ref) => {
 
-        const chartHeight = getChartHeight(transactions);
+        const chartHeight = getChartHeight(nodes);
 
         const getTransactions = (nodes) => {
-                const sentForward = [];
-                const sentBackward = [];
+            const sentForward = [];
+            const sentBackward = [];
 
-                transactions.forEach((transaction) => {
-                        const {vin, vout} = transaction;
+            transactions.forEach((transaction) => {
+                const {vin, vout} = transaction;
 
-                        vin.forEach((vin) => {
-                            const {address} = vin;
-                            if (address) {
-                                const from = nodes[address];
-                                vout.forEach(vout => {
-                                    if (vout.address) {
-                                        const to = nodes[vout.address];
+                vin.forEach((vin) => {
+                    const {address} = vin;
+                    if (address) {
+                        let from;
+                        nodes.forEach(node => {
+                            if (node.name === address.address) {
+                                from = node;
+                            }
+                        });
+                        if (from) {
+                            vout.forEach(vout => {
+                                let to;
+                                const {address} = vout;
+                                nodes.forEach(node => {
+                                    if (node.name === address.address) {
+                                        to = node;
+                                    }
+                                });
+                                if (to) {
+                                    if (from.value[0] < to.value[0]) {
                                         sentForward.push({
-                                            fromName: 'a',
-                                            toName: 'b',
+                                            fromName: from.name,
+                                            toName: to.name,
+                                            coords: [[from.value[0], from.value[1]], [to.value[0], to.value[1]]],
+                                            transaction,
+                                        })
+                                    } else {
+                                        sentBackward.push({
+                                            fromName: from.name,
+                                            toName: to.name,
                                             coords: [[from.value[0], from.value[1]], [to.value[0], to.value[1]]],
                                             transaction,
                                         })
                                     }
-                                })
-                            }
-                        })
+                                }
+                            });
+                        }
                     }
-                );
+                });
+            });
 
-                return {
-                    sentForward,
-                    sentBackward,
-                };
-            }
-        ;
+            return {
+                sentForward,
+                sentBackward,
+            };
+        };
+
 
         const getChartOptions = () => {
-            const nodes = getNodes(transactions, windowWidth, chartHeight, analysedAddress);
+            const displayNodes = getNodes(nodes, windowWidth, chartHeight, analysedAddress);
 
-            const {sentForward, sentBackward} = getTransactions(nodes);
+            console.log(` getChartOptions `, displayNodes);
 
-            const displayNodes = Object.values(nodes);
+            const {sentForward, sentBackward} = getTransactions(displayNodes);
+
+            console.log(sentForward, sentBackward);
+
+            // const displayNodes = Object.values(nodes);
 
             return {
                 backgroundColor: 'rgba(0,0,0,0)',
@@ -141,19 +165,17 @@ const TransactionsFlow = React.forwardRef(({
                         large: true,
                         tooltip: {
                             trigger: 'item',
-                            // formatter: (props) => {
-                            // const {data: {fromName, toName}} = props;
-                            // let tooltip = `From <b>${fromName}</b><br>To <b>${toName}</b><br><br>Transactions:<br>`;
-                            //
-                            // sentForward
-                            //     .filter((data) => data.fromName === fromName && data.toName === toName)
-                            //     .map((data) => data.transaction)
-                            //     .forEach((transaction, index) => {
-                            //         tooltip += `${index + 1}: <b>${transaction.value}</b> ETH (${moment(transaction.timeStamp * 1000).format(DATE_TIME_FORMAT)})<br>`;
-                            //     });
-                            //
-                            // return tooltip;
-                            // }
+                            formatter: (props) => {
+                                const {data: {fromName, toName}} = props;
+                                let tooltip = `From <b>${fromName}</b><br>To <b>${toName}</b><br><br>Transactions:<br>`;
+                                sentForward
+                                    .filter((data) => data.fromName === fromName && data.toName === toName)
+                                    .map((data) => data.transaction)
+                                    .forEach((transaction, index) => {
+                                        tooltip += `${index + 1}: <b>${transaction.txid}</b> (${moment(transaction.time * 1000).format(DATE_TIME_FORMAT)})<br>`;
+                                    });
+                                return tooltip;
+                            }
                         },
                         effect: {
                             show: true,
@@ -228,12 +250,12 @@ const TransactionsFlow = React.forwardRef(({
             // }
         };
 
-        console.log(' test', chartHeight);
+        console.log(' test', chartHeight, windowWidth);
 
         return (
             <div ref={ref}>
                 {
-                    transactions && transactions.length ? (
+                    nodes && nodes.length > 0 ? (
                             <div>
                                 <ReactTransactionsFlow
                                     option={getChartOptions()}
@@ -259,6 +281,7 @@ TransactionsFlow.propTypes = {
 };
 TransactionsFlow.defaultProps = {
     onAddressChange: console.log,
+    chartData: {},
 };
 
 export default windowSize(TransactionsFlow);

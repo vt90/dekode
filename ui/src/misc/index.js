@@ -6,65 +6,51 @@ export const getSearchParams = params => pickBy(params, value => value !== null 
 
 export const GRAPH_ITEM_HEIGHT = 100;
 
-export const getChartHeight = (transactions) => {
+export const getChartHeight = (nodes) => {
     let chartHeight = 0;
-    if (transactions && transactions.length) {
-        const maxNodes = maxBy(transactions, (transaction) => transaction.vin.length + transaction.vout.length);
+    if (nodes && nodes.length) {
+        const maxNodes = maxBy(nodes, (nodes) => nodes.length);
 
-        chartHeight = (maxNodes.vin.length + maxNodes.vout.length) * GRAPH_ITEM_HEIGHT;
+        chartHeight = maxNodes.length * GRAPH_ITEM_HEIGHT;
     }
 
     return chartHeight;
 };
 
 export const getNodes = (
-    transactions,
+    nodes,
     windowWidth,
     chartHeight,
     analysedAddress,
 ) => {
-    const displayNodes = {};
-    const xOffset = (windowWidth - 400) / (transactions.length - 1);
+    const displayNodes = [];
+    // const xOffset = (windowWidth - 120) / (nodes.length - 1);
+    const xOffset = (windowWidth - 300) / (nodes.length - 1);
     let x = 60;
 
-    transactions.forEach(transaction => {
-        let yOffset = (chartHeight - (transaction.vin.length + transaction.vout.length) * GRAPH_ITEM_HEIGHT) / ((transaction.vin.length + transaction.vout.length) + 1);
+    nodes.forEach((node) => {
+        const yOffset = (chartHeight - node.length * GRAPH_ITEM_HEIGHT) / (node.length + 1);
         let y = yOffset + GRAPH_ITEM_HEIGHT;
 
-        transaction.vin.forEach(entry => {
-            if (entry.address) {
-                const {address} = entry;
-                const isAnalysed = address.toLowerCase() === analysedAddress.toLowerCase();
-                const symbol = `image:///icons/${isAnalysed ? 'incognito' : 'account'}.png`;
-                displayNodes[address] = {
-                    name: address,
-                    value: [x, y, 4],
-                    symbolSize: isAnalysed ? 58 : 50,
-                    symbol,
-                };
+        node.forEach((address) => {
+            const isAnalysed = address.toLowerCase() === analysedAddress.toLowerCase();
+            const symbol = `image:///icons/${isAnalysed ? 'incognito' : 'account'}.png`;
+            displayNodes.push({
+                name: address,
+                value: [x, y, 4],
+                symbolSize: isAnalysed ? 58 : 50,
+                symbol,
+                // itemStyle: {
+                //   normal: {
+                //     color: isAnalysed ? '#FFFFFF' : '#F58158',
+                //   }
+                // }
+            });
 
-                y += GRAPH_ITEM_HEIGHT + yOffset;
-            }
-        });
-
-        transaction.vout.forEach(entry => {
-            if (entry.address) {
-                const {address} = entry;
-                const isAnalysed = address.toLowerCase() === analysedAddress.toLowerCase();
-                const symbol = `image:///icons/${isAnalysed ? 'incognito' : 'account'}.png`;
-                displayNodes[address] = {
-                    name: address,
-                    value: [x, y, 4],
-                    symbolSize: isAnalysed ? 58 : 50,
-                    symbol,
-                };
-
-                y += GRAPH_ITEM_HEIGHT + yOffset;
-            }
+            y += GRAPH_ITEM_HEIGHT + yOffset;
         });
 
         x += xOffset;
-
     });
 
     return displayNodes;

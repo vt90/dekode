@@ -26,7 +26,7 @@ const TransactionItem = ({
         },
     };
 
-    const timestamp = moment(transaction.timestamp);
+    const timestamp = moment(transaction.timestamp * 1000);
 
     if (transaction.income) {
         cardHeaderProps.avatar = <Income className={classes.income}/>;
