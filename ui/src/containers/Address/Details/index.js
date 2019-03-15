@@ -5,8 +5,9 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom'
 import {connect} from 'react-redux';
 import compose from 'lodash/fp/compose';
+import cx from 'classnames';
 import {getAddress} from 'actions/address';
-import {getTransactionsByAddress, getAddressFlow} from 'actions/transaction';
+import {getTransactionsByAddress, getAddressFlow, getAddressFlowBefore, getAddressFlowAfter} from 'actions/transaction';
 import Loading from 'components/Loading';
 import {addressesConstants} from 'constants/address';
 import {transactionConstants} from 'constants/transaction';
@@ -23,6 +24,8 @@ import Tab from '@material-ui/core/Tab';
 import Back from 'mdi-material-ui/ChevronLeft';
 import Pound from 'mdi-material-ui/Pound';
 import Header from './Header';
+import Next from '@material-ui/icons/NavigateNext';
+import Previous from '@material-ui/icons/NavigateBefore';
 import SourcesTimeline from './SourcesTimeline';
 import TransactionsList from './TransactionsList';
 import TransactionsFlow from './TransactionsFlow';
@@ -41,10 +44,10 @@ const TABS = {
         value: 2,
         name: 'Flow',
     },
-    LOGS: {
-        value: 3,
-        name: 'Logs'
-    }
+    // LOGS: {
+    //     value: 3,
+    //     name: 'Logs'
+    // }
 };
 
 class AddressDetails extends Component {
@@ -62,19 +65,24 @@ class AddressDetails extends Component {
     };
 
     getCurrentTabContent = () => {
-        const {selectedAddress, transactions, chartData} = this.props;
+        const {selectedAddress, transactions, chartData, isLoading} = this.props;
         const {currentTab} = this.state;
 
         switch (currentTab) {
             case TABS.SOURCES.value:
                 return <SourcesTimeline sources={selectedAddress.sources}/>;
             case TABS.TRANSACTIONS.value:
-                return <TransactionsList selectedAddress={selectedAddress.address} transactions={transactions}/>;
+                return <TransactionsList
+                    selectedAddress={selectedAddress.address}
+                    transactions={transactions}
+                    isLoading={isLoading && isLoading[transactionConstants.GET_ADDRESS_TRANSACTIONS_REQUEST]}
+                />;
             case TABS.FLOW.value:
                 return <TransactionsFlow
                     analysedAddress={selectedAddress.address}
                     transactions={transactions}
                     chartData={chartData}
+                    isLoading={isLoading && isLoading[transactionConstants.GET_ADDRESS_FLOW_REQUEST]}
                 />;
             default:
                 return <pre>{JSON.stringify(selectedAddress, null, 2)}</pre>;
@@ -82,21 +90,11 @@ class AddressDetails extends Component {
     };
 
     render() {
-        const {classes, isLoading, selectedAddress} = this.props;
+        const {classes, isLoading, selectedAddress, getAddressFlowBefore, getAddressFlowAfter} = this.props;
         const {currentTab} = this.state;
 
         if (isLoading && isLoading[addressesConstants.GET_ADDRESS_BY_ADDRESS_REQUEST]) {
             return <Loading message="Fetching address details"/>
-        }
-
-        if (currentTab === TABS.TRANSACTIONS.value &&
-            isLoading && isLoading[transactionConstants.GET_ADDRESS_TRANSACTIONS_REQUEST]) {
-            return <Loading message="Fetching transactions"/>
-        }
-
-        if (currentTab === TABS.FLOW.value &&
-            isLoading && isLoading[transactionConstants.GET_ADDRESS_FLOW_REQUEST]) {
-            return <Loading message="Fetching flow data"/>
         }
 
         if (!selectedAddress) return <Loading/>;
@@ -163,6 +161,23 @@ class AddressDetails extends Component {
                                             })
                                         }
                                     </Tabs>
+                                    {
+                                        currentTab === TABS.FLOW.value && <div className={cx('flex', 'justify-end')}>
+                                            <Button
+                                                className={classes.button}
+                                                onClick={getAddressFlowBefore}
+                                            >
+                                                <Previous/>
+                                            </Button>
+                                            <Button
+                                                className={classes.button}
+                                                onClick={getAddressFlowAfter}
+                                            >
+                                                <Next/>
+                                            </Button>
+                                        </div>
+
+                                    }
                                 </div>
 
                                 {this.getCurrentTabContent()}
@@ -198,6 +213,8 @@ const mapDispatchToProps = {
     getAddress,
     getTransactionsByAddress,
     getAddressFlow,
+    getAddressFlowBefore,
+    getAddressFlowAfter,
 };
 
 export default compose(

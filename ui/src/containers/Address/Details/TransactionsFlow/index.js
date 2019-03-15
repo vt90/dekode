@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import windowSize from 'react-window-size';
 import ReactTransactionsFlow from 'echarts-for-react';
 import {getNodes, getChartHeight} from 'misc';
+import Loading from "components/Loading";
 
 import moment from 'moment';
 
@@ -13,6 +14,7 @@ const TransactionsFlow = React.forwardRef(({
                                                chartData: {transactions, nodes},
                                                onAddressChange,
                                                windowWidth,
+                                               isLoading,
                                            }, ref) => {
 
         const chartHeight = getChartHeight(nodes);
@@ -75,13 +77,7 @@ const TransactionsFlow = React.forwardRef(({
         const getChartOptions = () => {
             const displayNodes = getNodes(nodes, windowWidth, chartHeight, analysedAddress);
 
-            console.log(` getChartOptions `, displayNodes);
-
             const {sentForward, sentBackward} = getTransactions(displayNodes);
-
-            console.log(sentForward, sentBackward);
-
-            // const displayNodes = Object.values(nodes);
 
             return {
                 backgroundColor: 'rgba(0,0,0,0)',
@@ -203,19 +199,17 @@ const TransactionsFlow = React.forwardRef(({
                         large: true,
                         tooltip: {
                             trigger: 'item',
-                            // formatter: (props) => {
-                            //     const {data: {fromName, toName}} = props;
-                            //     let tooltip = `From <b>${fromName}</b><br>To <b>${toName}</b><br><br>Transactions:<br>`;
-                            //
-                            //     sentBackward
-                            //         .filter((data) => data.fromName === fromName && data.toName === toName)
-                            //         .map((data) => data.transaction)
-                            //         .forEach((transaction, index) => {
-                            //             tooltip += `${index + 1}: <b>${transaction.value}</b> ETH (${moment(transaction.timeStamp * 1000).format(DATE_TIME_FORMAT)})<br>`;
-                            //         });
-                            //
-                            //     return tooltip;
-                            // }
+                            formatter: (props) => {
+                                const {data: {fromName, toName}} = props;
+                                let tooltip = `From <b>${fromName}</b><br>To <b>${toName}</b><br><br>Transactions:<br>`;
+                                sentForward
+                                    .filter((data) => data.fromName === fromName && data.toName === toName)
+                                    .map((data) => data.transaction)
+                                    .forEach((transaction, index) => {
+                                        tooltip += `${index + 1}: <b>${transaction.txid}</b> (${moment(transaction.time * 1000).format(DATE_TIME_FORMAT)})<br>`;
+                                    });
+                                return tooltip;
+                            }
                         },
                         effect: {
                             show: true,
@@ -249,9 +243,9 @@ const TransactionsFlow = React.forwardRef(({
             //     onAddressChange(name);
             // }
         };
-
-        console.log(' test', chartHeight, windowWidth);
-
+        if (isLoading) {
+            return <Loading message="Fetching flow data"/>
+        }
         return (
             <div ref={ref}>
                 {

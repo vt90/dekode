@@ -5,8 +5,13 @@ const router = Router();
 
 router
     .route('/')
-    .get(TransactionBusiness.list)
     .post(TransactionBusiness.create);
+
+router.route('/:tx')
+    .get(TransactionBusiness.list);
+
+router.route('/forward/:tx')
+    .get(TransactionBusiness.forward);
 
 router
     .route('/transaction/:address')

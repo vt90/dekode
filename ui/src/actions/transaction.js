@@ -1,7 +1,10 @@
 import http from 'config/http';
 import {TRANSACTION_API} from 'constants/api-routes';
 import {transactionConstants} from 'constants/transaction';
+import dataColor from "echarts/src/visual/dataColor";
 
+const getTransaction = txid => http.get(`${TRANSACTION_API}/${txid}`);
+const getTransactionForward = txid => http.get(`${TRANSACTION_API}/forward/${txid}`);
 const getTransactionsAddress = address => http.get(`${TRANSACTION_API}/transaction/${address}`);
 
 export const getTransactionsByAddress = (address) => async dispatch => {
@@ -64,7 +67,7 @@ export const getAddressFlow = (address) => async dispatch => {
                         isLevelZero = true;
                     }
                     if (!uniqNodes[add.address.address]) {
-                        levelZero.push(add.address.address);
+                        levelZero.push({name: add.address.address, txid: add.txid || txid});
                         uniqNodes[add.address.address] = true
                     }
                 }
@@ -74,7 +77,7 @@ export const getAddressFlow = (address) => async dispatch => {
             vout.forEach(address => {
                 if (address.address.address) {
                     if (!uniqNodes[address.address.address]) {
-                        levelOne.push(address.address.address);
+                        levelOne.push({name: address.address.address, txid: address.txid || txid});
                         uniqNodes[address.address.address] = true
                     }
                 }
@@ -90,6 +93,7 @@ export const getAddressFlow = (address) => async dispatch => {
         });
 
         chartData.nodes = nodes;
+        chartData.uniqNodes = uniqNodes;
 
         dispatch(getAddressFlowSuccess(chartData));
     } catch (error) {
@@ -107,3 +111,109 @@ const getAddressFlowFail = error => ({
     type: transactionConstants.GET_ADDRESS_FLOW_FAIL,
     payload: error
 });
+
+
+export const getAddressFlowBefore = () => async (dispatch, getState) => {
+    try {
+        dispatch(getAddressFlowRequest());
+        const {chartData} = getState().transaction;
+        const txs = [];
+        const uniqNodes = {...chartData.uniqNodes};
+
+        await Promise.all(chartData.nodes[0].map(async ({txid}) => {
+            try {
+                txs.push(...await getTransaction(txid));
+            } catch (e) {
+                //error
+            }
+        }));
+
+        const transactions = [...txs, ...chartData.transactions];
+
+        const lvl = [];
+        txs.forEach(transaction => {
+            const {vin, vout, txid} = transaction;
+            if (!vin) return;
+            vin.forEach((add) => {
+                if (add.address) {
+                    if (!uniqNodes[add.address.address]) {
+                        lvl.push({name: add.address.address, txid: add.txid || txid});
+                        uniqNodes[add.address.address] = true
+                    }
+                }
+            });
+            if (!vout) return;
+            vout.forEach((add) => {
+                if (add.address) {
+                    if (!uniqNodes[add.address.address]) {
+                        chartData.nodes[0].push({name: add.address.address, txid: add.txid || txid});
+                        uniqNodes[add.address.address] = true
+                    }
+                }
+            });
+
+        });
+
+        const nodes = [lvl, ...chartData.nodes];
+
+
+        dispatch(getAddressFlowSuccess({nodes, uniqNodes, transactions}));
+    } catch (error) {
+        console.log(error);
+        dispatch(getAddressFlowFail(error));
+    }
+};
+
+export const getAddressFlowAfter = () => async (dispatch, getState) => {
+    try {
+        dispatch(getAddressFlowRequest());
+        const {chartData} = getState().transaction;
+        const txs = [];
+        const uniqNodes = {...chartData.uniqNodes};
+
+        await Promise.all(chartData.nodes[chartData.nodes.length - 1].map(async ({txid}) => {
+            try {
+                txs.push(...await getTransactionForward(txid));
+            } catch (e) {
+                //error
+            }
+        }));
+
+        const transactions = [...chartData.transactions, ...txs];
+        const lvl = [];
+        console.log(txs);
+        txs.forEach(transaction => {
+            const {vin, vout, txid} = transaction;
+            if (!vout) return;
+            vout.forEach((add) => {
+                if (add.address) {
+                    if (!uniqNodes[add.address.address]) {
+                        lvl.push({name: add.address.address, txid: add.txid || txid});
+                        uniqNodes[add.address.address] = true
+                    }
+                }
+            });
+            if (!vin) return;
+            vin.forEach((add) => {
+                if (add.address) {
+                    if (!uniqNodes[add.address.address]) {
+                        chartData.nodes[chartData.nodes.length - 1].push({
+                            name: add.address.address,
+                            txid: add.txid || txid
+                        });
+                        uniqNodes[add.address.address] = true
+                    }
+                }
+            });
+
+        });
+
+        const nodes = [...chartData.nodes, lvl];
+
+        dispatch(getAddressFlowSuccess({nodes, uniqNodes, transactions}));
+    } catch (error) {
+        console.log(error);
+        dispatch(getAddressFlowFail(error));
+    }
+};
+

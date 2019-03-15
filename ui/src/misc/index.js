@@ -33,10 +33,10 @@ export const getNodes = (
         let y = yOffset + GRAPH_ITEM_HEIGHT;
 
         node.forEach((address) => {
-            const isAnalysed = address.toLowerCase() === analysedAddress.toLowerCase();
+            const isAnalysed = address.name.toLowerCase() === analysedAddress.toLowerCase();
             const symbol = `image:///icons/${isAnalysed ? 'incognito' : 'account'}.png`;
             displayNodes.push({
-                name: address,
+                name: address.name,
                 value: [x, y, 4],
                 symbolSize: isAnalysed ? 58 : 50,
                 symbol,

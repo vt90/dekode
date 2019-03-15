@@ -36,9 +36,10 @@ const TransactionItem = ({
         cardHeaderProps.subheader = `Sent on ${timestamp}`;
     }
 
-    const renderAddress = (txAddress) => {
+    const renderAddress = (txAddress, index) => {
         return (
             <Typography
+                key={`${txAddress} - ${index}`}
                 className="break-all"
                 color={txAddress === selectedAddress ? 'textPrimary' : 'textSecondary'}
                 variant={txAddress === selectedAddress ? 'body1' : 'body2'}
@@ -62,7 +63,7 @@ const TransactionItem = ({
                         </Typography>
 
                         {
-                            transaction.vin.map(({address}) => renderAddress(address))
+                            transaction.vin.map(({address}, index) => renderAddress(address, index))
                         }
                     </Grid>
 
@@ -72,7 +73,7 @@ const TransactionItem = ({
                         </Typography>
 
                         {
-                            transaction.vout.map(({address}) => renderAddress(address))
+                            transaction.vout.map(({address}, index) => renderAddress(address, index))
                         }
                     </Grid>
 

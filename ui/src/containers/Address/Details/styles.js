@@ -44,5 +44,9 @@ export default (theme) => {
                 background: 'rgba(0,0,0,0)',
             },
         },
+        button: {
+            backgroundColor: 'black',
+            marginLeft: 5,
+        }
     }
 }

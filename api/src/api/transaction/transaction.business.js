@@ -17,7 +17,17 @@ export const create = async (req, res, next) => {
 
 export const list = async (req, res, next) => {
     try {
-        const transactions = await Transaction.list(req.query.tx);
+        const transactions = await Transaction.list(req.params.tx);
+        res.status(httpStatus.OK);
+        res.json(transactions);
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const forward = async (req, res, next) => {
+    try {
+        const transactions = await Transaction.forward(req.params.tx);
         res.status(httpStatus.OK);
         res.json(transactions);
     } catch (error) {
@@ -30,7 +40,11 @@ export const listAddressTransactions = async (req, res, next) => {
         const {address} = req.params;
         const pageNumber = +req.query.pageNumber || 1;
         const pageSize = +req.query.pageSize || 100;
-        const {transactions,totalEntities} = await Transaction.listAddressTransactions({address, pageNumber, pageSize});
+        const {transactions, totalEntities} = await Transaction.listAddressTransactions({
+            address,
+            pageNumber,
+            pageSize
+        });
         res.status(httpStatus.OK).json({
             pageNumber,
             pageSize,

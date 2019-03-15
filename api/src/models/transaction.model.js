@@ -209,7 +209,37 @@ transactionSchema.statics = {
 
     list(hash) {
         try {
-            return this.find({hash}).populate().exec();
+            const select = "-_id txid vin.address vout.address vin.vout vout.value date time vin.txid";
+            const populate = [
+                {
+                    path: 'vin.address',
+                    select: 'address type flag -_id'
+                },
+                {
+                    path: 'vout.address',
+                    select: 'address type flag -_id'
+                }];
+
+            return this.find({hash}).select(select).populate(populate).exec();
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    forward(hash) {
+        try {
+            const select = "-_id txid vin.address vout.address vin.vout vout.value date time vin.txid";
+            const populate = [
+                {
+                    path: 'vin.address',
+                    select: 'address type flag -_id'
+                },
+                {
+                    path: 'vout.address',
+                    select: 'address type flag -_id'
+                }];
+
+            return this.find({"vin.txid": {"$in": [hash]}}).select(select).populate(populate).exec();
         } catch (error) {
             throw error;
         }
@@ -222,7 +252,7 @@ transactionSchema.statics = {
             limit: 'pageSize',
             totalDocs: 'totalEntities',
         };
-        const select = "-_id txid vin.address vout.address vin.vout vout.value date time";
+        const select = "-_id txid vin.address vout.address vin.vout vout.value date time vin.txid";
         const options = {"$or": [{"vout.address": {"$in": [address]}}, {"vin.address": {"$in": [address]}}]};
 
         return TransactionModel.paginate(options, {
